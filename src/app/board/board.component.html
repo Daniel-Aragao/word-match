@@ -1,1 +1,41 @@
-<p>board works!</p>
+<div class="size-full mx-auto rounded-sm flex flex-col gap-10">
+  @for (row of rows(); track i; let i = $index) {
+    <div class="attempt-row w-full gap-4 flex justify-center">
+      @for (attempt of row; track attempt.id; let j = $index) {
+        @let selected =
+          boardStoreService.selected().row === i &&
+          boardStoreService.selected().col === j;
+        <div
+          class="border-b-white border-b size-10 flex justify-center items-center text-2xl font-bold select-none"
+          [class.selected]="selected && !boardStoreService.isEnded()"
+          [class.correct]="attempt.result === 'correct'"
+          [class.present]="attempt.result === 'present'"
+          [class.miss]="attempt.result === 'miss'"
+          [ngClass]="{
+            'hover:border-b-4 hover:cursor-pointer':
+              boardStoreService.selected().row === i &&
+              !boardStoreService.isEnded(),
+          }"
+        >
+          @if (boardStoreService.currentAttempt() === i) {
+            <input
+              (click)="select(i, j)"
+              #cellInput
+              type="text"
+              [value]="attempt.letter"
+              class="size-full border-none bg-transparent text-center outline-none uppercase"
+              [disabled]="
+                boardStoreService.selected().row !== i ||
+                boardStoreService.isEnded()
+              "
+              [maxLength]="1"
+              (keydown)="typed(i, j, $event)"
+            />
+          } @else {
+            {{ attempt.letter }}
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

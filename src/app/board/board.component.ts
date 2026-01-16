@@ -1,11 +1,79 @@
-import { Component } from '@angular/core';
-
+import {
+  Component,
+  computed,
+  effect,
+  ElementRef,
+  input,
+  viewChildren,
+} from '@angular/core';
+import { BoardStore } from '../stores/board-store.service';
+import { CommonModule } from '@angular/common';
+import { Key } from 'ts-key-enum';
 @Component({
   selector: 'app-board',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './board.component.html',
-  styleUrl: './board.component.css'
+  styleUrl: './board.component.css',
 })
 export class BoardComponent {
+  numberOfAttempts = input<number>(6);
+  word = input<string>('ANGULAR');
 
+  inputs = viewChildren<ElementRef<HTMLInputElement>>('cellInput');
+
+  protected rows = computed(() => this.boardStoreService.attempts());
+
+  constructor(protected readonly boardStoreService: BoardStore) {
+    this.boardStoreService.setWord(this.word(), this.numberOfAttempts());
+
+    effect(() => {
+      const selected = this.boardStoreService.selected();
+
+      const input = this.inputs()[selected.col];
+      input?.nativeElement.focus();
+    });
+  }
+
+  select(i: number, j: number) {
+    this.boardStoreService.selectLetter(i, j);
+  }
+
+  typed(i: number, j: number, event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+
+    if (event.key === Key.Backspace) {
+      input.value = '';
+      this.boardStoreService.selectLetter(i, j - 1);
+      return;
+    }
+
+    if (event.key === Key.Enter) {
+      this.submit();
+      return;
+    }
+
+    const isLetter = event.key.length === 1 && event.key.match(/[a-z]/i);
+
+    if (isLetter) {
+      const value = event.key.toUpperCase();
+
+      if (value.length > 1) {
+        input.value = value.charAt(0);
+      } else {
+        input.value = value;
+      }
+
+      this.boardStoreService.typeLetter(value);
+    } else if (event.key.length === 1) {
+      event.preventDefault();
+    }
+  }
+
+  private submit() {
+    this.boardStoreService.submitAttempt().subscribe({
+      error: (error) => {
+        alert(error);
+      },
+    });
+  }
 }

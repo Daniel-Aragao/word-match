@@ -1,0 +1,9 @@
+@reference "../../styles.css";
+
+.key {
+  @apply bg-blue-500 size-8 p-2 text-xl hover:bg-blue-400 hover:cursor-pointer rounded-sm flex justify-center items-center text-white select-none;
+
+  &.enter {
+    @apply w-fit;
+  }
+}

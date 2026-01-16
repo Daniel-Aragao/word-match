@@ -1,8 +1,15 @@
-<div class="virtual-keyboard">
-  @for (row of letters; track row.join("")) {
-    <div class="keyboard-row">
-      @for (letter of row; track letters) {
-        <button class="key">{{ letter }}</button>
+<div class="virtual-keyboard rounded-sm gap-3 flex flex-col p-1 w-full">
+  @for (row of letters; track row.join(""); let i = $index) {
+    <div class="keyboard-row flex justify-center gap-2">
+      @for (letter of row; track letter) {
+        <button class="key" (click)="boardStore.typeLetter(letter)">
+          {{ letter }}
+        </button>
+      }
+      @if (i === letters.length - 1) {
+        <button class="key enter" (click)="boardStore.submitAttempt()">
+          Enter
+        </button>
       }
     </div>
   }

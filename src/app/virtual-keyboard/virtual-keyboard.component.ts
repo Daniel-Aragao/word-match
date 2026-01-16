@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { BoardStore } from '../stores/board-store.service';
 
 @Component({
   selector: 'app-virtual-keyboard',
@@ -11,4 +12,6 @@ export class VirtualKeyboardComponent {
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
     ['Z', 'X', 'C', 'V', 'B', 'N', 'M'],
   ];
+
+  constructor(protected boardStore: BoardStore) {}
 }
