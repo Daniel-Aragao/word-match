@@ -1,0 +1,9 @@
+<div class="virtual-keyboard">
+  @for (row of letters; track row.join("")) {
+    <div class="keyboard-row">
+      @for (letter of row; track letters) {
+        <button class="key">{{ letter }}</button>
+      }
+    </div>
+  }
+</div>
