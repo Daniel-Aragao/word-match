@@ -183,6 +183,36 @@ describe(GameStore.name, () => {
       expect(nextAttemptMock).toHaveBeenCalled();
     });
 
+    it('should processWordMiss should set answer when exhaust its options', () => {
+      const attemptMatrix = Array.from(
+        { length: correctAttempt[0].length + 1 },
+        () => wrongAttempt[0],
+      );
+      vi.spyOn(boardStore, 'attempts').mockReturnValue(attemptMatrix);
+
+      for (let i = 0; i < correctAttempt[0].length; i++) {
+        store.submitAttempt();
+      }
+
+      assert.Throw(() => store.submitAttempt());
+
+      expect(store.answer()).toStrictEqual({
+        word: 'banana',
+        isSuccess: false,
+      });
+    });
+
+    it('should set answer when user hits it', () => {
+      vi.spyOn(boardStore, 'attempts').mockReturnValue(correctAttempt);
+
+      store.submitAttempt();
+
+      expect(store.answer()).toStrictEqual({
+        word: 'banana',
+        isSuccess: true,
+      });
+    });
+
     it('should processWordMiss should update attempt with 5 "correct" letters and a "miss"', () => {
       vi.spyOn(boardStore, 'attempts').mockReturnValue(wrongAttempt);
       const nextAttemptMock = vi.spyOn(boardStore, 'nextAttempt');
@@ -304,6 +334,29 @@ describe(GameStore.name, () => {
 
       expect(nextAttemptMock).toHaveBeenCalled();
       expect(updateCurrentAttemptSpy).toBeCalledWith(expected);
+    });
+  });
+
+  describe('give up', () => {
+    let isEndedSpy: Mock;
+
+    it('should end the game', () => {
+      isEndedSpy = vi.spyOn(boardStore, 'setIsEnded');
+
+      store.giveUp();
+
+      expect(isEndedSpy).toHaveBeenCalled();
+    });
+
+    it('should return failed answer', () => {
+      isEndedSpy = vi.spyOn(boardStore, 'setIsEnded');
+
+      store.giveUp();
+
+      expect(store.answer()).toStrictEqual({
+        word: 'banana',
+        isSuccess: false,
+      });
     });
   });
 });

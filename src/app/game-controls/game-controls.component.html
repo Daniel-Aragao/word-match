@@ -4,12 +4,32 @@ tip
 language
 
 -->
-<div class="flex items-center justify-center gap-4 p-2">
-  <p class="text-4xl">Word Match</p>
-  <button
-    class="cursor-pointer rounded bg-blue-500 p-2 select-none"
-    (click)="gameStore.newWord()"
-  >
-    <app-icon iconName="refresh" />
-  </button>
+<div class="flex flex-col items-center justify-center gap-2">
+  <div class="flex items-center justify-center gap-4 p-2">
+    <p class="text-4xl">Word Match</p>
+    <div class="flex gap-1">
+      <button
+        class="cursor-pointer rounded bg-red-400 p-2 select-none"
+        (click)="gameStore.newWord()"
+      >
+        <app-icon iconName="refresh" />
+      </button>
+      <button
+        class="cursor-pointer rounded bg-red-400 p-2 select-none"
+        (click)="gameStore.giveUp()"
+      >
+        <app-icon iconName="search" />
+      </button>
+    </div>
+  </div>
+  @let answer = gameStore.answer();
+
+  @if (answer) {
+    <div class="flex gap-1">
+      <app-icon iconName="search" />
+      <p>
+        {{ answer.word }}
+      </p>
+    </div>
+  }
 </div>

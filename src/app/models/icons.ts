@@ -1,1 +1,1 @@
-export type IconName = 'refresh' | 'arrowRight' | 'backspace';
+export type IconName = 'refresh' | 'arrowRight' | 'backspace' | 'search';

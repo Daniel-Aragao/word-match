@@ -1,24 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Attempt, Language } from '../models';
-import { signalState } from '@ngrx/signals';
+import { patchState, signalState } from '@ngrx/signals';
 import { BoardStore } from './board-store.service';
 import { LanguageStore } from './language-store.service';
-import { Observable, of, throwError } from 'rxjs';
 import { compare, normalizeString } from '../utils/string.utils';
 
 interface GameState {
   language: Language;
+  answer: { word: string; isSuccess: boolean } | undefined;
 }
 
 const initialState: GameState = {
   language: 'pt-br',
+  answer: undefined,
 };
 
 @Injectable({
   providedIn: 'root',
 })
 export class GameStore {
-  state = signalState<GameState>(initialState);
+  private state = signalState<GameState>(initialState);
+
+  public answer = this.state.answer;
 
   constructor(
     private readonly boardStore: BoardStore,
@@ -32,6 +35,8 @@ export class GameStore {
   }
 
   newWord() {
+    this.setAnswer();
+
     const word = this.languageStore.getRandomWord();
 
     if (word) {
@@ -58,6 +63,31 @@ export class GameStore {
     this.processWordMiss(word);
   }
 
+  giveUp() {
+    const word = this.boardStore.word();
+
+    this.boardStore.setIsEnded(true);
+
+    this.setAnswer(word);
+  }
+
+  private setAnswer(word?: string, success = false) {
+    if (word) {
+      patchState(this.state, {
+        answer: {
+          word,
+          isSuccess: success,
+        },
+      });
+
+      return;
+    }
+
+    patchState(this.state, {
+      answer: undefined,
+    });
+  }
+
   private formWord(currentAttempt: number) {
     return this.boardStore
       .attempts()
@@ -74,6 +104,7 @@ export class GameStore {
 
     this.boardStore.updateCurrentAttempt(attemptLetters);
     this.boardStore.setIsEnded(true);
+    this.setAnswer(this.boardStore.word(), true);
   }
 
   private correctAccents(attemptLetters: Attempt[], word: string): Attempt[] {
@@ -122,7 +153,16 @@ export class GameStore {
 
     this.boardStore.updateCurrentAttempt(wordAttempt);
 
-    this.boardStore.nextAttempt();
+    this.tryToChangeLine();
+  }
+
+  private tryToChangeLine() {
+    try {
+      this.boardStore.nextAttempt();
+    } catch (err) {
+      this.setAnswer(this.boardStore.word(), false);
+      throw err;
+    }
   }
 
   private updateHittedLetters(
