@@ -19,9 +19,11 @@ export class VirtualKeyboardComponent {
   ];
 
   usedLetters = computed(() => {
+    const attemptNumber = this.boardStore.currentAttempt();
     return new Set(
       this.boardStore
         .attempts()
+        .filter((_, i) => i !== attemptNumber)
         .flatMap((a) => a.map((a) => normalizeString(a.letter).toUpperCase())),
     );
   });
