@@ -4,6 +4,7 @@ import {
   effect,
   ElementRef,
   input,
+  model,
   output,
   viewChildren,
 } from '@angular/core';
@@ -19,6 +20,9 @@ import { Key } from 'ts-key-enum';
 export class BoardComponent {
   numberOfAttempts = input<number>(6);
   word = input<string>('ANGULAR');
+  animateLine = model.required<undefined | 'vibrate' | 'success'>();
+  animateBoard = model.required<boolean>();
+
   public submit = output();
 
   inputs = viewChildren<ElementRef<HTMLInputElement>>('cellInput');

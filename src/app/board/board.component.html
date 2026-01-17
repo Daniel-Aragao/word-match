@@ -1,6 +1,12 @@
-<div class="mx-auto flex size-full flex-col gap-4 rounded-sm">
-  <!-- <div class="size-full flex justify-center">
-    {{ boardStoreService.word() }}
+<div
+  class="mx-auto flex size-full flex-col gap-4 rounded-sm"
+  [class.animate-vibrate]="animateBoard()"
+  (animationend)="animateBoard.set(false)"
+>
+  <!-- <div class="flex size-full justify-center">
+     {{ boardStoreService.word() }} 
+     {{ animateBoard() }} 
+     {{ animateLine() }} 
   </div> -->
   @for (row of rows(); track i; let i = $index) {
     <div class="attempt-row flex w-full justify-center gap-4">
@@ -17,6 +23,9 @@
           [class.present]="attempt.result === 'present'"
           [class.miss]="attempt.result === 'miss'"
           [class.active]="isCurrent && !boardStoreService.isEnded()"
+          [class.animate-vibrate]="isCurrent && animateLine() === 'vibrate'"
+          [class.animate-bounce-ball]="isCurrent && animateLine() === 'success'"
+          (animationend)="animateLine.set(undefined)"
         >
           @if (isCurrent) {
             <input

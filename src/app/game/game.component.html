@@ -1,5 +1,9 @@
 <div class="flex h-full w-full flex-col justify-between">
   <app-game-controls></app-game-controls>
-  <app-board (submit)="submit()"></app-board>
+  <app-board
+    (submit)="submit()"
+    [(animateLine)]="animateLine"
+    [(animateBoard)]="animateBoard"
+  ></app-board>
   <app-virtual-keyboard (submit)="submit()"></app-virtual-keyboard>
 </div>

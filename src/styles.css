@@ -1,7 +1,65 @@
 @import "tailwindcss";
+
 /* You can add global styles to this file, and also import other style files */
 
 html,
 body {
   @apply size-full;
+}
+
+@theme {
+  --animate-vibrate: vibrate 0.3s linear 1;
+  --animate-vibrate-long: vibrate 0.8s linear 1;
+  --animate-bounce-once: bounce 0.4s linear 3;
+  --animate-bounce-ball: bounce-ball 0.6s ease-in-out 1;
+
+  @keyframes vibrate {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(4px);
+    }
+    50% {
+      transform: translateX(-4px);
+    }
+    75% {
+      transform: translateX(4px);
+    }
+  }
+
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: none;
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+    50% {
+      transform: translateY(-25%) scaleY(0.9);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+  }
+
+  @keyframes bounce-ball {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      /* First big jump */
+      transform: translateY(-25%) scaleY(0.9);
+    }
+    65% {
+      /* Second smaller, faster jump */
+      transform: translateY(-10%) scaleY(0.9);
+    }
+    90% {
+      /* Third tiny, super-fast jump */
+      transform: translateY(-5%) scaleY(0.9);
+    }
+  }
 }
