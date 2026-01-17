@@ -13,6 +13,7 @@ ng serve
 ## Todos
 
 * Github link
+* Add tests
 
 ### Design
 

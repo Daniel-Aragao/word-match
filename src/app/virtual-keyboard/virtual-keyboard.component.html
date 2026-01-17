@@ -7,7 +7,6 @@
         <button
           class="key"
           (click)="boardStore.typeLetter(letter)"
-          [disabled]="isUsed"
           [class.used]="isUsed"
         >
           {{ letter }}
