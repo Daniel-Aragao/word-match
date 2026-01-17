@@ -9,7 +9,10 @@ import { map, Observable } from 'rxjs';
 export class LanguageService {
   constructor(private readonly client: HttpClient) {}
 
-  getLanguageVocabulary(language: Language): Observable<string[]> {
+  getLanguageVocabulary(
+    language: Language,
+    wordSize: number,
+  ): Observable<string[]> {
     return this.client
       .get(`/vocab/${language.toString()}.txt`, {
         responseType: 'text',
@@ -18,6 +21,7 @@ export class LanguageService {
         map((data: string) => {
           return data
             .split('\n')
+            .filter((line) => line.length === wordSize)
             .map((line: string) => line.trim().toUpperCase());
         }),
       );

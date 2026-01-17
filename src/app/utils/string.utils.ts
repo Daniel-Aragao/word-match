@@ -1,5 +1,5 @@
 export function compare(str1: string, str2: string): boolean {
-  return str1.localeCompare(str2) === 0;
+  return str1.localeCompare(str2, undefined, { sensitivity: 'base' }) === 0;
 }
 
 export function normalizeString(word: string): string {

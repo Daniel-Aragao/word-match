@@ -6,4 +6,8 @@
   &.enter {
     @apply w-fit;
   }
+
+  &.used {
+    @apply bg-gray-700 cursor-default;
+  }
 }

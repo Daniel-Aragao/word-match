@@ -2,28 +2,24 @@ import { computed, Injectable, linkedSignal } from '@angular/core';
 import { patchState, signalState } from '@ngrx/signals';
 import { Observable, of, throwError } from 'rxjs';
 import { compare, normalizeString } from '../utils/string.utils';
-import { Language, Attempt } from '../models';
-import { LanguageService } from '../services/language.service';
-import { LanguageStore } from './language-store.service';
+import { Attempt } from '../models';
 
 interface BoardState {
-  numberOfAttempts: number;
   word: string;
+  numberOfAttempts: number;
   numberOfLetters: number;
   selected: { row: number; col: number };
   currentAttempt: number;
   attempts: Attempt[][];
-  language: Language;
 }
 
 const initialState: BoardState = {
-  numberOfAttempts: 0,
   word: '',
+  numberOfAttempts: 0,
   numberOfLetters: 0,
   selected: { row: 0, col: 0 },
   currentAttempt: 1,
   attempts: [],
-  language: 'pt-br',
 };
 
 @Injectable({
@@ -32,6 +28,7 @@ const initialState: BoardState = {
 export class BoardStore {
   state = signalState<BoardState>(initialState);
 
+  word = this.state.word;
   selected = this.state.selected;
   numberOfAttempts = this.state.numberOfAttempts;
   attempts = this.state.attempts;
@@ -41,19 +38,17 @@ export class BoardStore {
     return this.state().currentAttempt >= this.state().numberOfAttempts;
   });
 
-  constructor(private readonly languageStore: LanguageStore) {
-    this.setLanguage(this.state().language);
-  }
+  constructor() {}
 
-  setLanguage(language: Language) {
-    this.languageStore.setLanguage(language);
+  getCurrentAttempt() {
+    return [...this.state.attempts()[this.state.currentAttempt()]];
   }
 
   setWord(word: string, numberOfAttempts: number) {
     patchState(this.state, initialState);
 
     patchState(this.state, {
-      word,
+      word: word.toUpperCase(),
       numberOfAttempts,
       numberOfLetters: word.length,
       currentAttempt: 0,
@@ -100,28 +95,7 @@ export class BoardStore {
     this.selectLetter(this.state().selected.row, this.state().selected.col + 1);
   }
 
-  submitAttempt(): Observable<void> {
-    const currentAttempt = this.state().currentAttempt;
-    const word = this.state()
-      .attempts[currentAttempt].map((v) => v.letter)
-      .filter((a) => a)
-      .join('');
-
-    if (word.length < this.state().numberOfLetters) {
-      return throwError(() => new Error('Not enough letters'));
-    }
-
-    const isCorrectWord = compare(word, this.state().word);
-
-    if (isCorrectWord) {
-      this.wordHit();
-      return of();
-    }
-
-    return this.wordMiss(word);
-  }
-
-  private updateCurrentAttempt(updatedAttempt: Attempt[]) {
+  updateCurrentAttempt(updatedAttempt: Attempt[]) {
     const currentAttempt = this.state().currentAttempt;
 
     patchState(this.state, {
@@ -131,49 +105,11 @@ export class BoardStore {
     });
   }
 
-  private wordHit() {
-    const currentAttempt = this.state().currentAttempt;
-    const attemptLetters = this.state().attempts[currentAttempt].map(
-      (l) => ({ ...l, result: 'correct' }) satisfies Attempt,
-    );
-
-    this.updateCurrentAttempt(attemptLetters);
-    this.isEnded.set(true);
+  setIsEnded(isEnded: boolean) {
+    this.isEnded.set(isEnded);
   }
 
-  private wordMiss(triedWord: string) {
-    const foundWord = this.languageStore.findWord(triedWord);
-
-    if (!foundWord) {
-      return throwError(() => new Error('Word not found in vocabulary'));
-    }
-
-    const correctWord = normalizeString(this.state.word());
-    const normalizedAttempt = normalizeString(foundWord);
-    const wordAttempt = [...this.state().attempts[this.state().currentAttempt]];
-
-    normalizedAttempt.split('').forEach((letter, index) => {
-      const letterAttempt: Attempt = {
-        ...wordAttempt[index],
-        letter: foundWord[index],
-        result: 'miss',
-      };
-
-      if (letter === correctWord[index]) {
-        letterAttempt.result = 'correct';
-      } else if (correctWord.includes(letter)) {
-        letterAttempt.result = 'present';
-      }
-
-      wordAttempt[index] = letterAttempt;
-    });
-
-    this.updateCurrentAttempt(wordAttempt);
-
-    return this.nextAttempt();
-  }
-
-  private nextAttempt() {
+  nextAttempt() {
     if (this.state.currentAttempt() === this.numberOfAttempts()) {
       this.isEnded.set(true);
       return throwError(() => new Error('No more attempts available'));

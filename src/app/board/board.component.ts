@@ -4,6 +4,7 @@ import {
   effect,
   ElementRef,
   input,
+  output,
   viewChildren,
 } from '@angular/core';
 import { BoardStore } from '../stores/board-store.service';
@@ -18,14 +19,13 @@ import { Key } from 'ts-key-enum';
 export class BoardComponent {
   numberOfAttempts = input<number>(6);
   word = input<string>('ANGULAR');
+  public submit = output();
 
   inputs = viewChildren<ElementRef<HTMLInputElement>>('cellInput');
 
   protected rows = computed(() => this.boardStoreService.attempts());
 
   constructor(protected readonly boardStoreService: BoardStore) {
-    this.boardStoreService.setWord(this.word(), this.numberOfAttempts());
-
     effect(() => {
       const selected = this.boardStoreService.selected();
 
@@ -48,7 +48,7 @@ export class BoardComponent {
     }
 
     if (event.key === Key.Enter) {
-      this.submit();
+      this.submitAttempt();
       return;
     }
 
@@ -69,11 +69,7 @@ export class BoardComponent {
     }
   }
 
-  private submit() {
-    this.boardStoreService.submitAttempt().subscribe({
-      error: (error) => {
-        alert(error);
-      },
-    });
+  private submitAttempt() {
+    this.submit.emit();
   }
 }
