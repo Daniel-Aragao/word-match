@@ -1,4 +1,7 @@
 <!-- <img [src]="iconName() + '.png'" class="size-6" /> -->
 <svg [style.width]="24" [style.height]="24" class="inline-block">
-  <use [attr.href]="iconName() + '.svg'"></use>
+  <use
+    [attr.href]="iconName() + '.svg'"
+    [attr.xlink:href]="iconName() + '.svg'"
+  ></use>
 </svg>
