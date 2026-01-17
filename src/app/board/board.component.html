@@ -1,9 +1,9 @@
-<div class="size-full mx-auto rounded-sm flex flex-col gap-10">
+<div class="mx-auto flex size-full flex-col gap-10 rounded-sm">
   <!-- <div class="size-full flex justify-center">
     {{ boardStoreService.word() }}
   </div> -->
   @for (row of rows(); track i; let i = $index) {
-    <div class="attempt-row w-full gap-4 flex justify-center">
+    <div class="attempt-row flex w-full justify-center gap-4">
       @for (attempt of row; track attempt.id; let j = $index) {
         @let selected =
           boardStoreService.selected().row === i &&
@@ -11,13 +11,13 @@
         @let isCurrent = boardStoreService.currentAttempt() === i;
 
         <div
-          class="border-b-white border-b size-10 flex justify-center items-center text-2xl font-bold select-none"
+          class="letter"
           [class.selected]="selected && !boardStoreService.isEnded()"
           [class.correct]="attempt.result === 'correct'"
           [class.present]="attempt.result === 'present'"
           [class.miss]="attempt.result === 'miss'"
           [ngClass]="{
-            'hover:border-2 border rounded':
+            'rounded border hover:border-2':
               isCurrent && !boardStoreService.isEnded(),
           }"
         >
@@ -28,7 +28,7 @@
               #cellInput
               type="text"
               [value]="attempt.letter"
-              class="size-full border-none bg-transparent text-center outline-none uppercase"
+              class="size-full border-none bg-transparent text-center uppercase outline-none"
               [disabled]="
                 boardStoreService.selected().row !== i ||
                 boardStoreService.isEnded()

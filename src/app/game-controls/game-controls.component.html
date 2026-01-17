@@ -4,8 +4,11 @@ tip
 language
 
 -->
-<div class="p-2 flex justify-center">
-  <button class="p-2 bg-blue-500 rounded" (click)="gameStore.newWord()">
+<div class="flex justify-center p-2">
+  <button
+    class="cursor-pointer rounded bg-blue-500 p-2 select-none"
+    (click)="gameStore.newWord()"
+  >
     New word
   </button>
 </div>

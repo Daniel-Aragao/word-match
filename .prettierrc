@@ -9,6 +9,6 @@
         "parser": "angular"
       }
     }
-  ]
-
+  ],
+  "plugins": [ "prettier-plugin-tailwindcss" ]
 }

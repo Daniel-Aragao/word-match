@@ -1,17 +1,26 @@
 @reference "../../styles.css";
 
+.letter {
+  @apply flex size-20 items-center justify-center border-b border-b-white text-2xl font-bold select-none;
+}
+@media (width < 600px) {
+  .letter {
+    @apply size-15;
+  }
+}
+
 .selected {
   @apply animate-bounce;
 }
 
 .correct {
-  @apply bg-green-700 text-white rounded-t-sm;
+  @apply rounded-t-sm bg-green-700 text-white;
 }
 
 .present {
-  @apply bg-yellow-600 text-white rounded-t-sm;
+  @apply rounded-t-sm bg-yellow-600 text-white;
 }
 
 .miss {
-  @apply bg-gray-700 text-white rounded-t-sm;
+  @apply rounded-t-sm bg-gray-700 text-white;
 }

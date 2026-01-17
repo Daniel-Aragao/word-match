@@ -1,13 +1,13 @@
 @reference "../../styles.css";
 
 .key {
-  @apply bg-blue-500 size-8 p-2 text-xl hover:bg-blue-400 hover:cursor-pointer rounded-sm flex justify-center items-center text-white select-none;
+  @apply flex h-14 flex-1 items-center justify-center rounded-sm bg-blue-500 p-2 text-xl text-white select-none hover:cursor-pointer hover:bg-blue-400;
 
   &.enter {
     @apply w-fit;
   }
 
   &.used {
-    @apply bg-gray-700 cursor-default;
+    @apply cursor-default bg-gray-700;
   }
 }

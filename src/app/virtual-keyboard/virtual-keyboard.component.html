@@ -1,4 +1,4 @@
-<div class="virtual-keyboard rounded-sm gap-3 flex flex-col p-1 w-full">
+<div class="virtual-keyboard flex w-full flex-col gap-2 rounded-sm p-1">
   @for (row of letters; track row.join(""); let i = $index) {
     <div class="keyboard-row flex justify-center gap-2">
       @for (letter of row; track letter) {

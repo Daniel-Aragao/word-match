@@ -18,7 +18,7 @@ const initialState: BoardState = {
   numberOfAttempts: 0,
   numberOfLetters: 0,
   selected: { row: 0, col: 0 },
-  currentAttempt: 1,
+  currentAttempt: 0,
   attempts: [],
 };
 
@@ -48,7 +48,7 @@ export class BoardStore {
     patchState(this.state, initialState);
 
     patchState(this.state, {
-      word: word.toUpperCase(),
+      word,
       numberOfAttempts,
       numberOfLetters: word.length,
       currentAttempt: 0,
@@ -134,8 +134,9 @@ export class BoardStore {
   }
 
   nextAttempt() {
-    if (this.state.currentAttempt() === this.numberOfAttempts()) {
+    if (this.state.currentAttempt() + 1 === this.numberOfAttempts()) {
       this.isEnded.set(true);
+
       return throwError(
         () => new Error('No more attempts available ' + this.state.word()),
       );
