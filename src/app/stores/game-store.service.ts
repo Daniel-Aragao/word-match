@@ -39,23 +39,23 @@ export class GameStore {
     }
   }
 
-  submitAttempt(): Observable<void> {
+  submitAttempt() {
     const currentAttempt = this.boardStore.currentAttempt();
 
     const word = this.formWord(currentAttempt);
 
     if (word.length < this.boardStore.wordSize()) {
-      return throwError(() => new Error('Not enough letters'));
+      throw new Error('Not enough letters');
     }
 
     const isCorrectWord = compare(word, this.boardStore.word());
 
     if (isCorrectWord) {
-      this.wordHit(this.boardStore.word());
-      return of();
+      this.processWordHit(this.boardStore.word());
+      return;
     }
 
-    return this.wordMiss(word);
+    this.processWordMiss(word);
   }
 
   private formWord(currentAttempt: number) {
@@ -66,7 +66,7 @@ export class GameStore {
       .join('');
   }
 
-  private wordHit(word: string) {
+  private processWordHit(word: string) {
     const currentAttempt = this.boardStore.currentAttempt();
     let attemptLetters = this.boardStore.attempts()[currentAttempt];
 
@@ -83,11 +83,11 @@ export class GameStore {
     );
   }
 
-  private wordMiss(triedWord: string) {
+  private processWordMiss(triedWord: string) {
     const foundWord = this.languageStore.findWord(triedWord);
 
     if (!foundWord) {
-      return throwError(() => new Error('Word not found in vocabulary'));
+      throw new Error('Word not found in vocabulary');
     }
 
     const correctWord = normalizeString(this.boardStore.word()).toUpperCase();
@@ -122,27 +122,7 @@ export class GameStore {
 
     this.boardStore.updateCurrentAttempt(wordAttempt);
 
-    return this.boardStore.nextAttempt();
-  }
-
-  private updatedMisplacedLetters(
-    normalizedAttempt: string,
-    wordAttempt: Attempt[],
-    correctWord: string,
-    correctLetters: Map<string, number>,
-  ) {
-    normalizedAttempt.split('').forEach((letter, index) => {
-      const letterAttempt: Attempt = wordAttempt[index];
-
-      if (!compare(letter, correctWord[index]) && correctLetters.has(letter)) {
-        const letterCount = correctLetters.get(letter)!;
-
-        if (letterCount > 0) {
-          correctLetters.set(letter, letterCount - 1);
-          letterAttempt.result = 'present';
-        }
-      }
-    });
+    this.boardStore.nextAttempt();
   }
 
   private updateHittedLetters(
@@ -167,6 +147,29 @@ export class GameStore {
         }
       }
       wordAttempt[index] = letterAttempt;
+    });
+  }
+
+  private updatedMisplacedLetters(
+    normalizedAttempt: string,
+    wordAttempt: Attempt[],
+    correctWord: string,
+    correctLetters: Map<string, number>,
+  ) {
+    normalizedAttempt.split('').forEach((letter, index) => {
+      const letterAttempt: Attempt = wordAttempt[index];
+
+      if (
+        !compare(letter, correctWord[index]) &&
+        correctLetters.has(letter.toUpperCase())
+      ) {
+        const letterCount = correctLetters.get(letter.toUpperCase())!;
+
+        if (letterCount > 0) {
+          correctLetters.set(letter, letterCount - 1);
+          letterAttempt.result = 'present';
+        }
+      }
     });
   }
 }

@@ -15,13 +15,12 @@ export class GameComponent {
   constructor(private readonly gameStore: GameStore) {}
 
   submit() {
-    this.gameStore
-      .submitAttempt()
-      .pipe(take(1))
-      .subscribe({
-        error: (errorMessage) => {
-          alert(errorMessage);
-        },
-      });
+    try {
+      this.gameStore.submitAttempt();
+    } catch (ex) {
+      if (ex instanceof Error) {
+        alert(ex.message);
+      }
+    }
   }
 }

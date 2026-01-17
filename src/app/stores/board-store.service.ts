@@ -38,8 +38,6 @@ export class BoardStore {
     return this.state().currentAttempt >= this.state().numberOfAttempts;
   });
 
-  constructor() {}
-
   getCurrentAttempt() {
     return [...this.state.attempts()[this.state.currentAttempt()]];
   }
@@ -137,9 +135,7 @@ export class BoardStore {
     if (this.state.currentAttempt() + 1 === this.numberOfAttempts()) {
       this.isEnded.set(true);
 
-      return throwError(
-        () => new Error('No more attempts available ' + this.state.word()),
-      );
+      throw new Error('No more attempts available ' + this.state.word());
     }
 
     patchState(this.state, {
@@ -147,7 +143,5 @@ export class BoardStore {
     });
 
     this.selectLetter(this.selected.row() + 1, 0);
-
-    return of();
   }
 }
