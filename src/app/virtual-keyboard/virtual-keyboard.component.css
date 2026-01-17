@@ -1,14 +1,14 @@
 @reference "../../styles.css";
 
 .key {
-  @apply flex h-14 flex-1 items-center justify-center rounded-sm bg-blue-500 p-2 text-xl text-white select-none hover:cursor-pointer hover:bg-blue-400;
+  @apply flex h-14 w-8 items-center justify-center rounded-sm bg-slate-600 p-2 text-xl text-white select-none hover:cursor-pointer hover:bg-blue-400;
 
   &.enter {
-    @apply flex-3;
+    @apply w-10;
   }
 
   &.backspace {
-    @apply flex-3;
+    @apply w-10;
   }
 
   &.used {

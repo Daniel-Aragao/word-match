@@ -1,6 +1,6 @@
-<div class="virtual-keyboard flex w-full flex-col gap-2 rounded-sm p-1">
+<div class="virtual-keyboard flex w-full flex-col gap-1 rounded-sm p-1">
   @for (row of letters; track row.join(""); let i = $index) {
-    <div class="keyboard-row flex justify-center gap-2">
+    <div class="keyboard-row flex justify-center gap-1">
       @for (letter of row; track letter) {
         @let isUsed = usedLetters().has(letter);
 
@@ -13,7 +13,7 @@
           {{ letter }}
         </button>
       }
-      @if (i === letters.length - 2) {
+      @if (i === 1) {
         <button class="key backspace" (click)="boardStore.removeLetter()">
           <app-icon iconName="backspace" />
         </button>
