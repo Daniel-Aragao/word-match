@@ -2,6 +2,7 @@
 
 .key {
   @apply flex h-14 w-8 items-center justify-center rounded-sm bg-slate-600 p-2 text-xl text-white select-none hover:cursor-pointer hover:bg-blue-400;
+  @apply touch-manipulation;
 
   &.enter {
     @apply w-10;
