@@ -1,6 +1,6 @@
 import { Component, computed, output } from '@angular/core';
 import { BoardStore } from '../stores/board-store.service';
-import { normalizeString } from '../utils/string.utils';
+import { compare, normalizeString } from '../utils/string.utils';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../icon/icon.component';
 
@@ -20,15 +20,23 @@ export class VirtualKeyboardComponent {
   ];
 
   usedLetters = computed(() => {
-    return new Set();
-    // todo: letras repetidas sao desabilitadas
-    // const attemptNumber = this.boardStore.currentAttempt();
-    // return new Set(
-    //   this.boardStore
-    //     .attempts()
-    //     .filter((_, i) => i !== attemptNumber)
-    //     .flatMap((a) => a.map((a) => normalizeString(a.letter).toUpperCase())),
-    // );
+    const attemptNumber = this.boardStore.currentAttempt();
+
+    return new Set(
+      this.boardStore
+        .attempts()
+        .filter((_, i) => i !== attemptNumber)
+        .flatMap((a) => a)
+        .filter(
+          (a, i, all) =>
+            a.result === 'miss' &&
+            !all.find(
+              (b, j) =>
+                i !== j && compare(b.letter, a.letter) && b.result !== 'miss',
+            ),
+        )
+        .map((a) => a.letter),
+    );
   });
 
   constructor(protected boardStore: BoardStore) {}
