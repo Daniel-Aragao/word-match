@@ -112,7 +112,9 @@ export class BoardStore {
   nextAttempt() {
     if (this.state.currentAttempt() === this.numberOfAttempts()) {
       this.isEnded.set(true);
-      return throwError(() => new Error('No more attempts available'));
+      return throwError(
+        () => new Error('No more attempts available ' + this.state.word()),
+      );
     }
 
     patchState(this.state, {
