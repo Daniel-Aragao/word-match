@@ -14,7 +14,7 @@ export class LanguageService {
     wordSize: number,
   ): Observable<string[]> {
     return this.client
-      .get(`/vocab/${language.toString()}.txt`, {
+      .get(`vocab/${language.toString()}.txt`, {
         responseType: 'text',
       })
       .pipe(
