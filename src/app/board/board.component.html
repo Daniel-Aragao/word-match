@@ -17,12 +17,13 @@
           [class.present]="attempt.result === 'present'"
           [class.miss]="attempt.result === 'miss'"
           [ngClass]="{
-            'hover:border-b-4 border rounded':
+            'hover:border-2 border rounded':
               isCurrent && !boardStoreService.isEnded(),
           }"
         >
           @if (isCurrent) {
             <input
+              inputmode="none"
               (click)="select(i, j)"
               #cellInput
               type="text"

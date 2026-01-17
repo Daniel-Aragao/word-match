@@ -42,8 +42,7 @@ export class BoardComponent {
     const input = event.target as HTMLInputElement;
 
     if (event.key === Key.Backspace) {
-      input.value = '';
-      this.boardStoreService.selectLetter(i, j - 1);
+      this.boardStoreService.removeLetter();
       return;
     }
 

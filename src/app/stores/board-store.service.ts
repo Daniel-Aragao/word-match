@@ -95,6 +95,30 @@ export class BoardStore {
     this.selectLetter(this.state().selected.row, this.state().selected.col + 1);
   }
 
+  removeLetter() {
+    const currentAttempt = this.state().currentAttempt;
+    const attemptLetters = [...this.state().attempts[currentAttempt]];
+    const col = this.state().selected.col;
+
+    let attemptLetter = attemptLetters[col];
+
+    if (attemptLetter.letter) {
+      attemptLetters[col] = {
+        ...attemptLetter,
+        letter: '',
+      };
+    } else if (col > 0) {
+      attemptLetter = attemptLetters[col - 1];
+      attemptLetters[col - 1] = {
+        ...attemptLetter,
+        letter: '',
+      };
+
+      this.selectLetter(this.state().selected.row, col - 1);
+    }
+    this.updateCurrentAttempt(attemptLetters);
+  }
+
   updateCurrentAttempt(updatedAttempt: Attempt[]) {
     const currentAttempt = this.state().currentAttempt;
 

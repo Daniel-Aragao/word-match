@@ -13,6 +13,11 @@
           {{ letter }}
         </button>
       }
+      @if (i === letters.length - 2) {
+        <button class="key enter" (click)="boardStore.removeLetter()">
+          Del
+        </button>
+      }
       @if (i === letters.length - 1) {
         <button class="key enter" (click)="submit.emit()">Enter</button>
       }

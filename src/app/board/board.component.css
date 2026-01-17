@@ -1,7 +1,7 @@
 @reference "../../styles.css";
 
 .selected {
-  @apply border-b-4 animate-bounce;
+  @apply animate-bounce;
 }
 
 .correct {

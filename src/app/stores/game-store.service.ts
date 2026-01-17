@@ -128,8 +128,6 @@ export class GameStore {
 
     this.boardStore.updateCurrentAttempt(wordAttempt);
 
-    return this.boardStore
-      .nextAttempt()
-      .subscribe({ error: (err) => alert(err) });
+    return this.boardStore.nextAttempt();
   }
 }
