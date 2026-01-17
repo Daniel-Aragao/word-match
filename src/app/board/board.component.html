@@ -16,13 +16,11 @@
           [class.correct]="attempt.result === 'correct'"
           [class.present]="attempt.result === 'present'"
           [class.miss]="attempt.result === 'miss'"
-          [ngClass]="{
-            'rounded border hover:border-2':
-              isCurrent && !boardStoreService.isEnded(),
-          }"
+          [class.active]="isCurrent && !boardStoreService.isEnded()"
         >
           @if (isCurrent) {
             <input
+              name="letter"
               inputmode="none"
               (click)="select(i, j)"
               #cellInput

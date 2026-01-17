@@ -4,7 +4,11 @@
   @apply flex h-14 flex-1 items-center justify-center rounded-sm bg-blue-500 p-2 text-xl text-white select-none hover:cursor-pointer hover:bg-blue-400;
 
   &.enter {
-    @apply w-fit;
+    @apply flex-3;
+  }
+
+  &.backspace {
+    @apply flex-3;
   }
 
   &.used {

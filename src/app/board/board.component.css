@@ -1,16 +1,20 @@
 @reference "../../styles.css";
 
 .letter {
-  @apply flex size-20 items-center justify-center border-b border-b-white text-2xl font-bold select-none;
+  @apply flex size-20 items-center justify-center rounded bg-gray-600 text-5xl font-bold select-none;
 }
 @media (width < 600px) {
   .letter {
-    @apply size-15;
+    @apply size-15 text-3xl;
   }
 }
 
+.active {
+  @apply border-2 border-gray-500 hover:border-2;
+}
+
 .selected {
-  @apply animate-bounce;
+  @apply border-white;
 }
 
 .correct {
@@ -22,5 +26,5 @@
 }
 
 .miss {
-  @apply rounded-t-sm bg-gray-700 text-white;
+  @apply rounded-t-sm bg-gray-800 text-white;
 }

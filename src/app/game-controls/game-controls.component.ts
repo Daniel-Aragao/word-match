@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { GameStore } from '../stores';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-game-controls',
-  imports: [],
+  imports: [IconComponent],
   templateUrl: './game-controls.component.html',
   styleUrl: './game-controls.component.css',
 })

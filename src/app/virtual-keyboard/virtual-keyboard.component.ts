@@ -2,12 +2,13 @@ import { Component, computed, output } from '@angular/core';
 import { BoardStore } from '../stores/board-store.service';
 import { normalizeString } from '../utils/string.utils';
 import { CommonModule } from '@angular/common';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-virtual-keyboard',
   templateUrl: './virtual-keyboard.component.html',
   styleUrl: './virtual-keyboard.component.css',
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
 })
 export class VirtualKeyboardComponent {
   public submit = output();

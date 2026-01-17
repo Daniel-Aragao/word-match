@@ -14,12 +14,14 @@
         </button>
       }
       @if (i === letters.length - 2) {
-        <button class="key enter" (click)="boardStore.removeLetter()">
-          Del
+        <button class="key backspace" (click)="boardStore.removeLetter()">
+          <app-icon iconName="backspace" />
         </button>
       }
       @if (i === letters.length - 1) {
-        <button class="key enter" (click)="submit.emit()">Enter</button>
+        <button class="key enter" (click)="submit.emit()">
+          <app-icon iconName="arrowRight" />
+        </button>
       }
     </div>
   }

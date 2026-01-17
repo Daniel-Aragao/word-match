@@ -35,7 +35,7 @@ export class GameStore {
     const word = this.languageStore.getRandomWord();
 
     if (word) {
-      this.boardStore.setWord('verão', word.length + 1);
+      this.boardStore.setWord(word, word.length + 1);
     }
   }
 
@@ -90,7 +90,7 @@ export class GameStore {
       return throwError(() => new Error('Word not found in vocabulary'));
     }
 
-    const correctWord = normalizeString(this.boardStore.word());
+    const correctWord = normalizeString(this.boardStore.word()).toUpperCase();
 
     const correctLetters = new Map<string, number>();
 
@@ -134,7 +134,7 @@ export class GameStore {
     normalizedAttempt.split('').forEach((letter, index) => {
       const letterAttempt: Attempt = wordAttempt[index];
 
-      if (letter !== correctWord[index] && correctLetters.has(letter)) {
+      if (!compare(letter, correctWord[index]) && correctLetters.has(letter)) {
         const letterCount = correctLetters.get(letter)!;
 
         if (letterCount > 0) {
@@ -159,7 +159,7 @@ export class GameStore {
         result: 'miss',
       };
 
-      if (letter === correctWord[index]) {
+      if (compare(letter, correctWord[index])) {
         letterAttempt.result = 'correct';
 
         if (correctLetters.has(letter)) {

@@ -51,6 +51,10 @@ export class BoardComponent {
       return;
     }
 
+    if (event.key === Key.Tab) {
+      event.preventDefault();
+    }
+
     const isLetter = event.key.length === 1 && event.key.match(/[a-z]/i);
 
     if (isLetter) {

@@ -19,6 +19,7 @@ ng serve
 * Create color scheme
 * Dark and light themes
 * Fix flex spacing
+* Add proper icons
 
 ### Game
 
