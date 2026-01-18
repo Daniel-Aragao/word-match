@@ -22,6 +22,7 @@ export class GameStore {
   private state = signalState<GameState>(initialState);
 
   public answer = this.state.answer;
+  public language = this.state.language;
 
   constructor(
     private readonly boardStore: BoardStore,
@@ -31,6 +32,10 @@ export class GameStore {
   }
 
   setLanguage(language: Language) {
+    this.setAnswer();
+
+    patchState(this.state, { language });
+
     this.languageStore.setLanguage(language).subscribe(() => this.newWord());
   }
 

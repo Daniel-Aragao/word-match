@@ -4,7 +4,7 @@ import { Vocabulary } from '../models/vocabulary';
 import { patchState, signalState } from '@ngrx/signals';
 import { LanguageService } from '../services/language.service';
 import { normalizeString } from '../utils/string.utils';
-import { of, tap } from 'rxjs';
+import { map, of, tap } from 'rxjs';
 
 interface LanguageState {
   selectedLanguage: Language;
@@ -34,11 +34,17 @@ export class LanguageStore {
   setLanguage(language: Language) {
     patchState(this.state, { selectedLanguage: language });
 
-    if (!this.state().vocabularies[language]) {
-      return this.fetchLanguageVocabulary(language);
+    const vocab = this.state().vocabularies[language];
+
+    if (!vocab) {
+      return this.fetchLanguageVocabulary(language).pipe(
+        map(() => {
+          return;
+        }),
+      );
     }
 
-    return of();
+    return of(void 0);
   }
 
   getRandomWord() {

@@ -21,6 +21,25 @@ language
         <app-icon iconName="Search" />
       </button>
     </div>
+    <div
+      class="flex items-center justify-center gap-1 rounded-sm bg-slate-800 p-1"
+    >
+      <app-icon iconName="Language" />
+      <button
+        class="key"
+        [class.active]="this.gameStore.language() === 'pt-br'"
+        (click)="gameStore.setLanguage('pt-br')"
+      >
+        PT
+      </button>
+      <button
+        class="key"
+        [class.active]="this.gameStore.language() === 'en-us'"
+        (click)="gameStore.setLanguage('en-us')"
+      >
+        EN
+      </button>
+    </div>
   </div>
   @let answer = gameStore.answer();
 

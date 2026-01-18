@@ -13,18 +13,15 @@ ng serve
 ## Todos
 
 * Github link
-* Add tests
 
 ### Design
 
 * Create color scheme
 * Dark and light themes
-* Fix flex spacing
-* Add proper icons
 
 ### Game
 
 * Set word size
-* Tips
 * Language
-* Show game over details
+  * Create a secondery vocab with easier words to challenge
+  * Keep giant vocab for word search

@@ -1,0 +1,9 @@
+@reference "../../styles.css";
+
+.key {
+  @apply flex items-center justify-center rounded-sm bg-slate-600 p-1 text-sm text-white select-none hover:cursor-pointer hover:bg-blue-400;
+
+  &.active {
+    @apply bg-slate-400;
+  }
+}
