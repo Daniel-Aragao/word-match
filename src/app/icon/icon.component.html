@@ -1,7 +1,5 @@
-<!-- <img [src]="iconName() + '.png'" class="size-6" /> -->
-<svg [style.width]="24" [style.height]="24" class="inline-block fill-current">
-  <use
-    [attr.href]="iconName() + '.svg'"
-    [attr.xlink:href]="iconName() + '.svg'"
-  ></use>
-</svg>
+<svg
+  viewBox="0 -960 960 960"
+  class="size-6 fill-current"
+  [innerHTML]="iconPath()"
+></svg>
