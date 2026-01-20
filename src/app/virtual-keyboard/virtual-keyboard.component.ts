@@ -35,7 +35,7 @@ export class VirtualKeyboardComponent {
                 i !== j && compare(b.letter, a.letter) && b.result !== 'miss',
             ),
         )
-        .map((a) => a.letter),
+        .map((a) => normalizeString(a.letter)),
     );
   });
 
