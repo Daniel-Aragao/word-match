@@ -9,20 +9,20 @@ language
     <p class="text-3xl">Word Match</p>
     <div class="flex gap-1">
       <button
-        class="cursor-pointer rounded bg-red-400 p-2 select-none"
+        class="bg-danger hover:bg-danger-hover cursor-pointer rounded p-2 select-none"
         (click)="gameStore.newWord()"
       >
         <app-icon iconName="Refresh" />
       </button>
       <button
-        class="cursor-pointer rounded bg-red-400 p-2 select-none"
+        class="bg-danger hover:bg-danger-hover cursor-pointer rounded p-2 select-none"
         (click)="gameStore.giveUp()"
       >
         <app-icon iconName="Visibility" />
       </button>
     </div>
     <div
-      class="bg-dark flex h-10 items-center justify-center gap-1 rounded-sm px-2"
+      class="bg-muted flex h-10 items-center justify-center gap-1 rounded-sm px-2"
     >
       <app-icon iconName="Language" />
       <button

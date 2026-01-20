@@ -26,5 +26,5 @@
 }
 
 .miss {
-  @apply bg-dark text-primary-text rounded-t-sm;
+  @apply bg-muted text-primary-text rounded-t-sm;
 }

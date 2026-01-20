@@ -13,6 +13,6 @@
   }
 
   &.used {
-    @apply bg-dark cursor-default;
+    @apply bg-muted cursor-default;
   }
 }
