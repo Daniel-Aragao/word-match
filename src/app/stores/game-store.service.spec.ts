@@ -22,6 +22,7 @@ type LanguageStoreMock = {
   setLanguage: MockInstance<() => Observable<void>>;
   getRandomWord: MockInstance<() => string>;
   findWord: MockInstance<() => string | undefined>;
+  language: MockInstance<() => string>;
 };
 
 describe(GameStore.name, () => {
@@ -43,6 +44,7 @@ describe(GameStore.name, () => {
       setLanguage: vi.fn(() => of(undefined)),
       getRandomWord: vi.fn(() => wordList[0]),
       findWord: vi.fn().mockReturnValue('bananc'),
+      language: vi.fn(() => 'pt-br'),
     };
 
     TestBed.configureTestingModule({
@@ -85,6 +87,7 @@ describe(GameStore.name, () => {
     let updateCurrentAttemptSpy: Mock;
     let correctAttempt: Attempt[][];
     let wrongAttempt: Attempt[][];
+    222;
 
     beforeEach(() => {
       correctAttempt = [
