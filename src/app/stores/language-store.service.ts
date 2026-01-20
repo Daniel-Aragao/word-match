@@ -1,4 +1,4 @@
-import { computed, effect, Injectable } from '@angular/core';
+import { effect, Injectable } from '@angular/core';
 import { Language } from '../models';
 import { Vocabulary } from '../models/vocabulary';
 import { patchState, signalState } from '@ngrx/signals';
@@ -12,7 +12,7 @@ interface LanguageState {
 }
 
 const initialState: LanguageState = {
-  selectedLanguage: 'pt-br',
+  selectedLanguage: Language.PT_BR,
   vocabularies: {},
 };
 
@@ -35,10 +35,15 @@ export class LanguageStore {
   }
 
   loadSelectedLanguageFromStorage() {
-    const storedLanguage = localStorage.getItem('selectedLanguage') as Language;
+    const storedLanguage = localStorage.getItem('selectedLanguage');
 
-    if (storedLanguage) {
-      patchState(this.state, { selectedLanguage: storedLanguage });
+    if (
+      storedLanguage &&
+      Object.values(Language).includes(storedLanguage as Language)
+    ) {
+      patchState(this.state, {
+        selectedLanguage: storedLanguage as Language,
+      });
       return;
     }
 

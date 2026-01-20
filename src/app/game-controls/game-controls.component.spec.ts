@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GameControlsComponent } from './game-controls.component';
+import { describe, beforeEach, it, expect } from 'vitest';
 
 describe('GameControlsComponent', () => {
   let component: GameControlsComponent;
@@ -8,9 +9,8 @@ describe('GameControlsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GameControlsComponent]
-    })
-    .compileComponents();
+      imports: [GameControlsComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(GameControlsComponent);
     component = fixture.componentInstance;

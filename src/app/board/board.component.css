@@ -10,7 +10,7 @@
 }
 
 .active {
-  @apply border-2 border-gray-500 hover:border-2;
+  @apply border-2 border-gray-400 hover:border-2;
 }
 
 .selected {

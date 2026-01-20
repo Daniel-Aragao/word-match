@@ -18,7 +18,7 @@ language
         class="cursor-pointer rounded bg-red-400 p-2 select-none"
         (click)="gameStore.giveUp()"
       >
-        <app-icon iconName="Search" />
+        <app-icon iconName="Visibility" />
       </button>
     </div>
     <div
@@ -27,15 +27,15 @@ language
       <app-icon iconName="Language" />
       <button
         class="key"
-        [class.active]="this.gameStore.language() === 'pt-br'"
-        (click)="gameStore.setLanguage('pt-br')"
+        [class.active]="this.gameStore.language() === Language?.PT_BR"
+        (click)="gameStore.setLanguage(Language!.PT_BR)"
       >
         PT
       </button>
       <button
         class="key"
-        [class.active]="this.gameStore.language() === 'en-us'"
-        (click)="gameStore.setLanguage('en-us')"
+        [class.active]="this.gameStore.language() === Language?.EN_US"
+        (click)="gameStore.setLanguage(Language!.EN_US)"
       >
         EN
       </button>
@@ -45,7 +45,7 @@ language
 
   @if (answer) {
     <div class="flex gap-1">
-      <app-icon iconName="Search" />
+      <app-icon iconName="Check" />
       <p>
         {{ answer.word }}
       </p>

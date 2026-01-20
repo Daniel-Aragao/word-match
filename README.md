@@ -13,7 +13,6 @@ ng serve
 ## Todos
 
 * Github link
-* Local storage for lang selection
 
 ### Design
 
