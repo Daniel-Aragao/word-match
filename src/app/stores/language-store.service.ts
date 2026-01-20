@@ -4,11 +4,28 @@ import { Vocabulary } from '../models/vocabulary';
 import { patchState, signalState } from '@ngrx/signals';
 import { LanguageService } from '../services/language.service';
 import { normalizeString } from '../utils/string.utils';
-import { map, of, tap } from 'rxjs';
+import {
+  catchError,
+  forkJoin,
+  map,
+  Observable,
+  of,
+  switchMap,
+  tap,
+} from 'rxjs';
+
+type Mode = 'ALL' | 'COMMON';
 
 interface LanguageState {
   selectedLanguage: Language;
-  vocabularies: Partial<Record<Language, Vocabulary>>;
+  vocabularies: Partial<
+    Record<
+      Language,
+      {
+        [k in Mode]: Vocabulary;
+      }
+    >
+  >;
 }
 
 const initialState: LanguageState = {
@@ -50,24 +67,42 @@ export class LanguageStore {
     localStorage.setItem('selectedLanguage', this.state.selectedLanguage());
   }
 
-  setLanguage(language: Language) {
+  setLanguage(language: Language): Observable<void> {
     patchState(this.state, { selectedLanguage: language });
 
-    const vocab = this.state().vocabularies[language];
+    const vocabs = this.state().vocabularies[language];
+    const generalVocab = vocabs?.['ALL'];
+    const commonVocab = vocabs?.['COMMON'];
 
-    if (!vocab) {
-      return this.fetchLanguageVocabulary(language).pipe(
-        map(() => {
-          return;
-        }),
-      );
+    const requests: { [key: string]: Observable<any> } = {};
+
+    if (!generalVocab) {
+      requests['all'] = this.languageService
+        .getLanguageVocabulary(language, 5)
+        .pipe(
+          tap((words) => this.addLanguage(language, words, 'ALL')),
+          catchError(() => {
+            console.error(`Optional vocabulary (ALL) failed for: ${language}`);
+            return of(null);
+          }),
+        );
     }
 
-    return of(void 0);
+    if (!commonVocab) {
+      requests['common'] = this.languageService
+        .getLanguageCommmonVocabulary(language, 5)
+        .pipe(tap((words) => this.addLanguage(language, words, 'COMMON')));
+    }
+
+    if (Object.keys(requests).length === 0) {
+      return of(void 0);
+    }
+
+    return forkJoin(requests).pipe(map(() => void 0));
   }
 
   getRandomWord() {
-    const vocab = this.getSelectedVocab();
+    const vocab = this.getSelectedVocab()?.['COMMON'];
     if (!vocab) return null;
 
     const randomKeyIndex = Math.floor(Math.random() * vocab.keys.length);
@@ -78,19 +113,14 @@ export class LanguageStore {
 
   findWord(word: string) {
     const language = this.state.selectedLanguage();
-    const vocabulary = this.state().vocabularies[language];
+    const vocabulary =
+      this.state().vocabularies[language]?.['ALL'] ||
+      this.state().vocabularies[language]?.['COMMON'];
+
     return vocabulary?.words.get(word)?.[0];
   }
 
-  private fetchLanguageVocabulary(language: Language) {
-    return this.languageService.getLanguageVocabulary(language, 5).pipe(
-      tap((words) => {
-        this.addLanguage(language, words);
-      }),
-    );
-  }
-
-  private addLanguage(language: Language, words: string[]) {
+  private addLanguage(language: Language, words: string[], mode: Mode = 'ALL') {
     const wordIndex = new Map<string, string[]>();
 
     const vocabulary: Vocabulary = {
@@ -111,10 +141,12 @@ export class LanguageStore {
 
     vocabulary.keys = Array.from(wordIndex.keys());
 
+    const vocabs = this.state().vocabularies[language];
+
     patchState(this.state, {
       vocabularies: {
         ...this.state().vocabularies,
-        [language]: vocabulary,
+        [language]: { ...vocabs, [mode]: vocabulary },
       },
     });
   }

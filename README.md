@@ -18,11 +18,18 @@ ng serve
 
 * Create color scheme
 * Dark and light themes
-* Arrow navigation
 
 ### Game
 
 * Set word size
-* Language
-  * Create a secondery vocab with easier words to challenge
-  * Keep giant vocab for word search
+* Add French
+
+## Word Sources
+
+* EN-US
+  * [EF Education First](https://www.ef.com/ca/english-resources/english-vocabulary/top-3000-words/)
+  * [Github English words](https://github.com/dwyl/english-words/tree/master)
+* PT-BR
+  * [USP br-utf8.txt](https://www.ime.usp.br/~pf/dicios/)
+  * [Github fserb pt-br](https://github.com/fserb/pt-br/blob/master/lexico)
+    * [icf](https://github.com/fserb/pt-br/blob/master/icf)
