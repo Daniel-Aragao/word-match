@@ -13,11 +13,13 @@ ng serve
 ## Todos
 
 * Github link
+* Local storage for lang selection
 
 ### Design
 
 * Create color scheme
 * Dark and light themes
+* Arrow navigation
 
 ### Game
 

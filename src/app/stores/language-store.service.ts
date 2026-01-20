@@ -24,11 +24,6 @@ export class LanguageStore {
   private getSelectedVocab = () =>
     this.state.vocabularies()[this.state.selectedLanguage()];
 
-  private vocabularyIndexSize = computed(() => {
-    const vocab = this.getSelectedVocab();
-    return vocab?.words.size ?? 0;
-  });
-
   constructor(private readonly languageService: LanguageService) {}
 
   setLanguage(language: Language) {

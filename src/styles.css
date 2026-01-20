@@ -4,7 +4,7 @@
 
 html,
 body {
-  @apply size-full min-h-dvh min-w-sm bg-gray-700;
+  @apply size-full overflow-hidden bg-gray-700;
 }
 
 @theme {
@@ -17,6 +17,7 @@ body {
     0%,
     100% {
       transform: translateX(0);
+      will-change: transform;
     }
     25% {
       transform: translateX(4px);
