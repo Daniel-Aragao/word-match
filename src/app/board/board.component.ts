@@ -55,6 +55,16 @@ export class BoardComponent {
       return;
     }
 
+    if (event.key === Key.ArrowLeft) {
+      this.boardStoreService.selectLetter(i, j - 1);
+      return;
+    }
+
+    if (event.key === Key.ArrowRight) {
+      this.boardStoreService.selectLetter(i, j + 1);
+      return;
+    }
+
     if (event.key === Key.Tab) {
       event.preventDefault();
     }
