@@ -78,6 +78,10 @@ export class BoardStore {
   }
 
   typeLetter(letter: string) {
+    if (this.isEnded()) {
+      return;
+    }
+
     const currentAttempt = this.state().currentAttempt;
     const attemptLetters = [...this.state().attempts[currentAttempt]];
 
