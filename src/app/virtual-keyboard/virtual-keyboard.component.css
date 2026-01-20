@@ -1,7 +1,7 @@
 @reference "../../styles.css";
 
 .key {
-  @apply flex h-14 w-8 items-center justify-center rounded-sm bg-slate-600 p-2 text-xl text-white select-none hover:cursor-pointer hover:bg-blue-400;
+  @apply bg-primary hover:bg-primary-hover flex h-14 w-8 items-center justify-center rounded-sm p-2 text-xl text-white select-none hover:cursor-pointer;
   @apply touch-manipulation;
 
   &.enter {
@@ -13,6 +13,6 @@
   }
 
   &.used {
-    @apply cursor-default bg-gray-700;
+    @apply bg-dark cursor-default;
   }
 }
