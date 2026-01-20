@@ -1,4 +1,4 @@
-import { computed, Injectable } from '@angular/core';
+import { computed, effect, Injectable } from '@angular/core';
 import { Language } from '../models';
 import { Vocabulary } from '../models/vocabulary';
 import { patchState, signalState } from '@ngrx/signals';
@@ -24,7 +24,26 @@ export class LanguageStore {
   private getSelectedVocab = () =>
     this.state.vocabularies()[this.state.selectedLanguage()];
 
-  constructor(private readonly languageService: LanguageService) {}
+  public language = this.state.selectedLanguage;
+
+  constructor(private readonly languageService: LanguageService) {
+    this.loadSelectedLanguageFromStorage();
+
+    effect(() => {
+      localStorage.setItem('selectedLanguage', this.state.selectedLanguage());
+    });
+  }
+
+  loadSelectedLanguageFromStorage() {
+    const storedLanguage = localStorage.getItem('selectedLanguage') as Language;
+
+    if (storedLanguage) {
+      patchState(this.state, { selectedLanguage: storedLanguage });
+      return;
+    }
+
+    localStorage.setItem('selectedLanguage', this.state.selectedLanguage());
+  }
 
   setLanguage(language: Language) {
     patchState(this.state, { selectedLanguage: language });

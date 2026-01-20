@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable } from '@angular/core';
 import { Attempt, Language } from '../models';
 import { patchState, signalState } from '@ngrx/signals';
 import { BoardStore } from './board-store.service';
@@ -6,12 +6,10 @@ import { LanguageStore } from './language-store.service';
 import { compare, normalizeString } from '../utils/string.utils';
 
 interface GameState {
-  language: Language;
   answer: { word: string; isSuccess: boolean } | undefined;
 }
 
 const initialState: GameState = {
-  language: 'pt-br',
   answer: undefined,
 };
 
@@ -22,20 +20,16 @@ export class GameStore {
   private state = signalState<GameState>(initialState);
 
   public answer = this.state.answer;
-  public language = this.state.language;
+  public language = computed(() => this.languageStore.language());
 
   constructor(
     private readonly boardStore: BoardStore,
     private readonly languageStore: LanguageStore,
   ) {
-    this.setLanguage(this.state().language);
+    this.setLanguage(this.languageStore.language());
   }
 
   setLanguage(language: Language) {
-    this.setAnswer();
-
-    patchState(this.state, { language });
-
     this.languageStore.setLanguage(language).subscribe(() => this.newWord());
   }
 
