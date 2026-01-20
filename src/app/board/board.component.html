@@ -1,5 +1,5 @@
 <div
-  class="mx-auto flex size-full flex-col gap-4 rounded-sm"
+  class="mx-auto flex size-full flex-col gap-2 rounded-sm"
   [class.animate-vibrate]="animateBoard()"
   (animationend)="animateBoard.set(false)"
 >
@@ -9,7 +9,7 @@
      {{ animateLine() }} 
   </div> -->
   @for (row of rows(); track i; let i = $index) {
-    <div class="attempt-row flex w-full justify-center gap-4">
+    <div class="attempt-row flex w-full justify-center gap-2">
       @for (attempt of row; track attempt.id; let j = $index) {
         @let selected =
           boardStoreService.selected().row === i &&

@@ -4,7 +4,7 @@
 
 html,
 body {
-  @apply size-full;
+  @apply size-full min-h-dvh min-w-sm bg-gray-700;
 }
 
 @theme {
@@ -61,5 +61,34 @@ body {
       /* Third tiny, super-fast jump */
       transform: translateY(-5%) scaleY(0.9);
     }
+  }
+
+  /* Custom Scrollbar Utilities */
+}
+
+@layer base {
+  ::-webkit-scrollbar {
+    @apply size-2;
+  }
+
+  ::-webkit-scrollbar-corner {
+    display: hidden;
+  }
+
+  html {
+    @apply relative;
+  }
+
+  ::-webkit-scrollbar-track {
+    /* @apply bg-gray-700; */
+    @apply absolute bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-md border-2 border-transparent bg-transparent bg-clip-content;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-500 bg-clip-content;
   }
 }
