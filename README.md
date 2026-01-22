@@ -22,7 +22,10 @@ ng serve
 ### Game
 
 * Set word size
-* Add French
+* Scoreboard (use mat icon)
+* Word of the day
+* Share option
+  * word included when not word of the day
 
 ## Word Sources
 
