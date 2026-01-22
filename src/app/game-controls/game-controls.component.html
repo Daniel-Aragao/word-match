@@ -5,27 +5,49 @@ language
 
 -->
 <div class="flex flex-col items-center justify-center gap-2">
-  <div class="flex items-center justify-center gap-4 p-2">
-    <p class="text-3xl">Word Match</p>
-    <div class="flex gap-1">
+  <p class="text-xl">Word Match</p>
+  <div class="flex items-center justify-center gap-2 p-2">
+    <div
+      class="control-group"
+      [class.open]="isGameMenuOpen()"
+      [class.closed]="!isGameMenuOpen()"
+    >
+      <app-icon
+        iconName="Controller"
+        (click)="isGameMenuOpen.set(!isGameMenuOpen())"
+      />
       <button
-        class="bg-danger hover:bg-danger-hover cursor-pointer rounded p-2 select-none"
-        (click)="gameStore.newWord()"
+        class="key"
+        (click)="gameStore.newWord(); $event.stopPropagation()"
       >
         <app-icon iconName="Refresh" />
       </button>
       <button
-        class="bg-danger hover:bg-danger-hover cursor-pointer rounded p-2 select-none"
-        (click)="gameStore.giveUp()"
+        class="key"
+        (click)="gameStore.giveUp(); $event.stopPropagation()"
       >
         <app-icon iconName="Visibility" />
       </button>
     </div>
     <div
-      class="bg-muted flex h-10 items-center justify-center gap-1 rounded-sm px-2"
+      class="control-group"
+      [class.open]="isLanguageSelectorOpen()"
+      [class.ajar]="!isLanguageSelectorOpen()"
     >
-      <app-icon iconName="Language" />
-      <button
+      <app-icon iconName="Language" (click)="toggleLanguageSelector()" />
+      @for (language of languages(); track language) {
+        @let isActive = this.gameStore.language() === language.code;
+        <button
+          class="key"
+          [class.active]="isActive"
+          (click)="selectLanguage(language.code, $event)"
+        >
+          {{ language.label }}
+        </button>
+        <!-- @if (isActive || isLanguageSelectorOpen()) {
+        } -->
+      }
+      <!-- <button
         class="key"
         [class.active]="this.gameStore.language() === Language?.PT_BR"
         (click)="gameStore.setLanguage(Language!.PT_BR)"
@@ -39,6 +61,13 @@ language
       >
         EN
       </button>
+      <button
+        class="key"
+        [class.active]="this.gameStore.language() === Language?.FR"
+        (click)="gameStore.setLanguage(Language!.FR)"
+      >
+        FR
+      </button> -->
     </div>
   </div>
   @let answer = gameStore.answer();

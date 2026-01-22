@@ -72,11 +72,11 @@ body {
   --color-primary-active: var(--color-slate-400);
   --color-primary-disabled: var(--color-slate-700);
   --color-primary-text: var(--color-white);
-  --color-primary: var(--color-slate-600);
 
-  --color-secondary: var(--color-indigo-600);
+  --color-secondary: #f1c28e;
   --color-secondary-hover: var(--color-indigo-500);
   --color-secondary-active: var(--color-indigo-400);
+  --color-secondary-text: var(--color-slate-600);
 
   --color-danger: var(--color-red-400);
   --color-danger-hover: var(--color-red-300);
@@ -89,6 +89,16 @@ body {
   --color-card: var(--color-gray-600);
   --color-card-border: var(--color-gray-400);
   --color-card-border-active: var(--color-white);
+
+  /* Shadow */
+  /* --shadow-game-card:
+    0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2); */
+
+  --shadow-soft:
+    0 4px 6px -7px rgba(0, 0, 0, 0.5), 0 2px 4px -5px rgba(0, 0, 0, 0.4);
+
+  --shadow-primary-glow: 0 0 15px var(--color-primary);
+  --shadow-secondary-glow: 0 0 15px var(--color-secondary);
 }
 
 @layer base {
