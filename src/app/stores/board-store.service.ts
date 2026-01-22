@@ -98,6 +98,9 @@ export class BoardStore {
   }
 
   removeLetter() {
+    if (this.isEnded()) {
+      return;
+    }
     const currentAttempt = this.state().currentAttempt;
     const attemptLetters = [...this.state().attempts[currentAttempt]];
     const col = this.state().selected.col;
