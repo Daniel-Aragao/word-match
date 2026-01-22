@@ -3,11 +3,6 @@
   [class.animate-vibrate]="animateBoard()"
   (animationend)="animateBoard.set(false)"
 >
-  <!-- <div class="flex size-full justify-center">
-     {{ boardStoreService.word() }} 
-     {{ animateBoard() }} 
-     {{ animateLine() }} 
-  </div> -->
   @for (row of rows(); track i; let i = $index) {
     <div class="attempt-row flex w-full justify-center gap-2">
       @for (attempt of row; track attempt.id; let j = $index) {
@@ -35,6 +30,7 @@
               (click)="select(i, j)"
               #cellInput
               type="text"
+              [placeholder]="placeholder()[j]"
               [value]="attempt.letter"
               class="size-full border-none bg-transparent text-center uppercase outline-none"
               [disabled]="

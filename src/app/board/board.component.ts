@@ -11,6 +11,8 @@ import {
 import { BoardStore } from '../stores/board-store.service';
 import { CommonModule } from '@angular/common';
 import { Key } from 'ts-key-enum';
+import { LanguageStore } from '../stores';
+import { normalizeString } from '../utils/string.utils';
 @Component({
   selector: 'app-board',
   imports: [CommonModule],
@@ -19,9 +21,36 @@ import { Key } from 'ts-key-enum';
 })
 export class BoardComponent {
   numberOfAttempts = input<number>(6);
-  word = input<string>('ANGULAR');
   animateLine = model.required<undefined | 'vibrate' | 'success'>();
   animateBoard = model.required<boolean>();
+
+  placeholder = computed((): string => {
+    const isEmpty = this.boardStoreService
+      .getCurrentAttempt()
+      .every((a) => a.letter == '');
+
+    if (!isEmpty) {
+      return Array(this.boardStoreService.wordSize()).fill(' ').join('');
+    }
+
+    if (this.boardStoreService.currentAttempt() === 0) {
+      return this.languageStore.getRandomWord() ?? 'radio';
+    }
+
+    const placeholder = this.boardStoreService
+      .attempts()
+      .reduce((acc, attempt) => {
+        attempt.forEach((a, j) => {
+          if (a.result === 'correct') {
+            acc[j] = normalizeString(a.letter);
+          }
+        });
+
+        return acc;
+      }, Array(this.boardStoreService.wordSize()).fill(' '));
+
+    return placeholder.join('');
+  });
 
   public submit = output();
 
@@ -29,7 +58,10 @@ export class BoardComponent {
 
   protected rows = computed(() => this.boardStoreService.attempts());
 
-  constructor(protected readonly boardStoreService: BoardStore) {
+  constructor(
+    protected readonly boardStoreService: BoardStore,
+    private readonly languageStore: LanguageStore,
+  ) {
     effect(() => {
       const selected = this.boardStoreService.selected();
 
