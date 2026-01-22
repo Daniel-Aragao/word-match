@@ -33,3 +33,7 @@ ng serve
   * [USP br-utf8.txt](https://www.ime.usp.br/~pf/dicios/)
   * [Github fserb pt-br](https://github.com/fserb/pt-br/blob/master/lexico)
     * [icf](https://github.com/fserb/pt-br/blob/master/icf)
+* FR
+  * [Lexique](http://www.lexique.org/)
+  * [Open Lexicon](http://www.lexique.org/django/openlexicon/)
+    * Common: Top 15317 words of the DB `WorldLex_FR` ordered by `NewsFreq`

@@ -19,7 +19,7 @@ export class GameControlsComponent {
     [
       { code: Language.PT_BR, label: 'PT' },
       { code: Language.EN_US, label: 'EN' },
-      // { code: Language.FR, label: 'FR' },
+      { code: Language.FR, label: 'FR' },
     ].sort((a, b) => a.label.localeCompare(b.label)),
   );
 

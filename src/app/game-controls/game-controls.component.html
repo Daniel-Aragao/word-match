@@ -44,30 +44,7 @@ language
         >
           {{ language.label }}
         </button>
-        <!-- @if (isActive || isLanguageSelectorOpen()) {
-        } -->
       }
-      <!-- <button
-        class="key"
-        [class.active]="this.gameStore.language() === Language?.PT_BR"
-        (click)="gameStore.setLanguage(Language!.PT_BR)"
-      >
-        PT
-      </button>
-      <button
-        class="key"
-        [class.active]="this.gameStore.language() === Language?.EN_US"
-        (click)="gameStore.setLanguage(Language!.EN_US)"
-      >
-        EN
-      </button>
-      <button
-        class="key"
-        [class.active]="this.gameStore.language() === Language?.FR"
-        (click)="gameStore.setLanguage(Language!.FR)"
-      >
-        FR
-      </button> -->
     </div>
   </div>
   @let answer = gameStore.answer();
