@@ -21,7 +21,7 @@ export function createRandomGenerator(seed: number): (max?: number) => number {
 export function createRandomGeneratorOfDay(date: Date = new Date()) {
   const seed =
     Number(
-      `${date.getUTCFullYear()}${date.getUTCMonth()}${date.getUTCDate()}`,
+      `${date.getFullYear()}${date.getMonth()}${date.getDate()}`,
     ) ** 2;
 
   return createRandomGenerator(seed);

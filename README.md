@@ -16,14 +16,15 @@ ng serve
 
 ### Design
 
-* Create color scheme
 * Dark and light themes
 
 ### Game
 
 * Set word size
-* Scoreboard (use mat icon)
-* Word of the day
+* Scoreboard/scorekeep (use mat icon)
+  * average attempts
+  * streak
+  * last runed word or daily
 * Share option
   * word included when not word of the day
 

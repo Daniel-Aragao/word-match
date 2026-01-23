@@ -11268,7 +11268,6 @@ compostas
 caracterizar
 defina
 conseguirem
-hatch
 experimentação
 urna
 indie
@@ -11281,7 +11280,6 @@ noivado
 operando
 sonoro
 movimenta
-bus
 bois
 resolvem
 fralda
@@ -11352,7 +11350,6 @@ motivar
 kart
 tango
 feitiço
-dm
 previa
 envolva
 configurado
@@ -14618,7 +14615,6 @@ supervisionado
 pepe
 inventa
 emergente
-crash
 sucede
 assistia
 consistia
