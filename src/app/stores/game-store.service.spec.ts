@@ -362,4 +362,28 @@ describe(GameStore.name, () => {
       });
     });
   });
+
+  describe('word of the day', () => {
+    it('should be the same every call', () => {
+      const words = [];
+
+      words.push(store.newWordOfTheDay());
+      words.push(store.newWordOfTheDay());
+      words.push(store.newWordOfTheDay());
+      words.push(store.newWordOfTheDay());
+
+      expect(words).toEqual([words[0], words[0], words[0], words[0]]);
+    });
+
+    it('should save start time only once', () => {
+      const words = [];
+
+      words.push(store.newWordOfTheDay());
+      words.push(store.newWordOfTheDay());
+      words.push(store.newWordOfTheDay());
+      words.push(store.newWordOfTheDay());
+
+      expect(words).toEqual([words[0], words[0], words[0], words[0]]);
+    });
+  });
 });

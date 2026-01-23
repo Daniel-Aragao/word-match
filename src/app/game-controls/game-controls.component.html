@@ -7,6 +7,25 @@ language
 <div class="flex flex-col items-center justify-center gap-2">
   <p class="text-xl">Word Match</p>
   <div class="flex items-center justify-center gap-2 p-2">
+    <button
+      class="control-group"
+      [class.open]="isWordOfTheDayOpen() || gameStore.isDailyGameActive()"
+      [class.closed]="!isWordOfTheDayOpen()"
+    >
+      <app-icon
+        iconName="EarlyOn"
+        (click)="isWordOfTheDayOpen.set(!isWordOfTheDayOpen())"
+      />
+      @if (gameStore.isDailyGameCompleted() || gameStore.isDailyGameActive()) {
+        <div>
+          {{ gameOfTheDayDuration() | duration }}
+        </div>
+      } @else {
+        <button class="key" (click)="startGameOfTheDay()">
+          <app-icon iconName="TimerPlay" />
+        </button>
+      }
+    </button>
     <div
       class="control-group"
       [class.open]="isGameMenuOpen()"

@@ -13,6 +13,10 @@
   @apply bg-secondary text-secondary-text shadow-soft flex h-10 items-center justify-start gap-2 rounded-sm px-2;
   @apply overflow-hidden transition-all duration-1000;
 
+  [iconName] {
+    @apply cursor-pointer;
+  }
+
   &.open {
     @apply max-w-40;
   }

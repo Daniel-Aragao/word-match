@@ -4,13 +4,28 @@ import { patchState, signalState } from '@ngrx/signals';
 import { BoardStore } from './board-store.service';
 import { LanguageStore } from './language-store.service';
 import { compare, normalizeString } from '../utils/string.utils';
+import { dateKey } from '../utils/date.utils';
 
 interface GameState {
   answer: { word: string; isSuccess: boolean } | undefined;
+  dailyResult: {
+    date: Date;
+    startTime: number;
+    endTime: number;
+    isSuccess: boolean | undefined;
+    isStarted: boolean;
+  };
 }
 
 const initialState: GameState = {
   answer: undefined,
+  dailyResult: {
+    date: new Date(),
+    startTime: 0,
+    endTime: 0,
+    isSuccess: undefined,
+    isStarted: false,
+  },
 };
 
 @Injectable({
@@ -21,6 +36,18 @@ export class GameStore {
 
   public answer = this.state.answer;
   public language = computed(() => this.languageStore.language());
+  public dailyResult = this.state.dailyResult;
+  public isDailyGameActive = computed(() => {
+    return (
+      this.state.dailyResult().isStarted &&
+      this.state.dailyResult().endTime === 0
+    );
+  });
+  public isDailyGameCompleted = computed(() => {
+    return (
+      this.state.dailyResult().isStarted && this.state.dailyResult().endTime > 0
+    );
+  });
 
   constructor(
     private readonly boardStore: BoardStore,
@@ -33,14 +60,35 @@ export class GameStore {
     this.languageStore.setLanguage(language).subscribe(() => this.newWord());
   }
 
-  newWord() {
+  newWord(seed?: Date) {
     this.setAnswer();
 
-    const word = this.languageStore.getRandomWord();
+    const word = this.languageStore.getRandomWord(seed);
 
     if (word) {
       this.boardStore.setWord(word, word.length + 1);
     }
+  }
+
+  newWordOfTheDay() {
+    const today = new Date();
+
+    if (dateKey(this.state.dailyResult().date) === dateKey(today)) {
+      if (this.state.dailyResult().isStarted) {
+        return;
+      }
+    }
+
+    patchState(this.state, {
+      dailyResult: {
+        ...this.state.dailyResult(),
+        date: today,
+        startTime: Date.now(),
+        isStarted: true,
+      },
+    });
+
+    this.newWord(today);
   }
 
   submitAttempt() {
@@ -68,6 +116,7 @@ export class GameStore {
     this.boardStore.setIsEnded(true);
 
     this.setAnswer(word);
+    this.endDailyGame(false);
   }
 
   private setAnswer(word?: string, success = false) {
@@ -104,6 +153,20 @@ export class GameStore {
     this.boardStore.updateCurrentAttempt(attemptLetters);
     this.boardStore.setIsEnded(true);
     this.setAnswer(this.boardStore.word(), true);
+
+    this.endDailyGame(true);
+  }
+
+  private endDailyGame(hit: boolean) {
+    if (this.isDailyGameActive()) {
+      patchState(this.state, {
+        dailyResult: {
+          ...this.state.dailyResult(),
+          endTime: Date.now(),
+          isSuccess: hit,
+        },
+      });
+    }
   }
 
   private correctAccents(attemptLetters: Attempt[], word: string): Attempt[] {
@@ -159,9 +222,15 @@ export class GameStore {
     try {
       this.boardStore.nextAttempt();
     } catch (err) {
-      this.setAnswer(this.boardStore.word(), false);
+      this.processMissedGame();
       throw err;
     }
+  }
+
+  private processMissedGame() {
+    this.setAnswer(this.boardStore.word(), false);
+
+    this.endDailyGame(false);
   }
 
   private updateHittedLetters(

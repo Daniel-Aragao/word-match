@@ -13,6 +13,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { createRandomGeneratorOfDay } from '../utils/random.utils';
 
 type Mode = 'ALL' | 'COMMON';
 
@@ -101,12 +102,18 @@ export class LanguageStore {
     return forkJoin(requests).pipe(map(() => void 0));
   }
 
-  getRandomWord() {
+  getRandomWord(seed?: Date) {
     const vocab = this.getSelectedVocab()?.['COMMON'];
     if (!vocab) return null;
 
-    const randomKeyIndex = Math.floor(Math.random() * vocab.keys.length);
-    const wordGroup = vocab.words.get(vocab.keys[randomKeyIndex]) || [];
+    let randomIndex = 0;
+    if (seed) {
+      const generator = createRandomGeneratorOfDay(seed);
+      randomIndex = generator(vocab.keys.length);
+    } else {
+      randomIndex = Math.floor(Math.random() * vocab.keys.length);
+    }
+    const wordGroup = vocab.words.get(vocab.keys[randomIndex]) || [];
 
     return wordGroup[Math.floor(Math.random() * wordGroup.length)];
   }
