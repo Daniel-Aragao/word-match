@@ -14,6 +14,7 @@ import {
   tap,
 } from 'rxjs';
 import { createRandomGeneratorOfDay } from '../utils/random.utils';
+import { Constants } from '../models/constants';
 
 type Mode = 'ALL' | 'COMMON';
 
@@ -48,12 +49,17 @@ export class LanguageStore {
     this.loadSelectedLanguageFromStorage();
 
     effect(() => {
-      localStorage.setItem('selectedLanguage', this.state.selectedLanguage());
+      localStorage.setItem(
+        Constants.storage.selectedLanguage,
+        this.state.selectedLanguage(),
+      );
     });
   }
 
   loadSelectedLanguageFromStorage() {
-    const storedLanguage = localStorage.getItem('selectedLanguage');
+    const storedLanguage = localStorage.getItem(
+      Constants.storage.selectedLanguage,
+    );
 
     if (
       storedLanguage &&
@@ -65,7 +71,10 @@ export class LanguageStore {
       return;
     }
 
-    localStorage.setItem('selectedLanguage', this.state.selectedLanguage());
+    localStorage.setItem(
+      Constants.storage.selectedLanguage,
+      this.state.selectedLanguage(),
+    );
   }
 
   setLanguage(language: Language): Observable<void> {

@@ -1,20 +1,15 @@
-import { computed, Injectable } from '@angular/core';
-import { Attempt, Language } from '../models';
+import { computed, effect, Injectable } from '@angular/core';
+import { Attempt, Challenge, Language } from '../models';
 import { patchState, signalState } from '@ngrx/signals';
 import { BoardStore } from './board-store.service';
 import { LanguageStore } from './language-store.service';
 import { compare, normalizeString } from '../utils/string.utils';
 import { dateKey } from '../utils/date.utils';
+import { Constants } from '../models/constants';
 
 interface GameState {
   answer: { word: string; isSuccess: boolean } | undefined;
-  dailyResult: {
-    date: Date;
-    startTime: number;
-    endTime: number;
-    isSuccess: boolean | undefined;
-    isStarted: boolean;
-  };
+  dailyResult: Challenge;
 }
 
 const initialState: GameState = {
@@ -54,6 +49,10 @@ export class GameStore {
     private readonly languageStore: LanguageStore,
   ) {
     this.setLanguage(this.languageStore.language());
+
+    effect(() => {
+      this.loadDailyResult();
+    });
   }
 
   setLanguage(language: Language) {
@@ -166,7 +165,28 @@ export class GameStore {
           isSuccess: hit,
         },
       });
+
+      this.storeDailyResult();
     }
+  }
+
+  private storeDailyResult() {
+    localStorage.setItem(
+      Constants.storage.dailyResult(this.language()),
+      JSON.stringify(this.state.dailyResult()),
+    );
+  }
+
+  private loadDailyResult() {
+    const dailyResult = localStorage.getItem(
+      Constants.storage.dailyResult(this.language()),
+    );
+
+    patchState(this.state, {
+      dailyResult: dailyResult
+        ? JSON.parse(dailyResult)
+        : { ...initialState.dailyResult },
+    });
   }
 
   private correctAccents(attemptLetters: Attempt[], word: string): Attempt[] {

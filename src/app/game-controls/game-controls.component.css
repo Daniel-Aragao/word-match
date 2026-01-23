@@ -29,4 +29,12 @@
     @apply max-w-10;
   }
 }
-/* w 1 button + w. icon + p+ gap */
+
+.duration {
+  &.failed {
+    color: var(--color-secondary-text-danger);
+  }
+  &.succeeded {
+    color: var(--color-secondary-text-success);
+  }
+}

@@ -24,6 +24,20 @@ export class GameControlsComponent {
   protected isGameMenuOpen = signal(true);
   protected isLanguageSelectorOpen = signal(true);
 
+  protected failedDaily = computed(() => {
+    return (
+      this.gameStore.isDailyGameCompleted() &&
+      !this.gameStore.dailyResult().isSuccess
+    );
+  });
+
+  protected succeededDaily = computed(() => {
+    return (
+      this.gameStore.isDailyGameCompleted() &&
+      this.gameStore.dailyResult().isSuccess
+    );
+  });
+
   private interval?: number;
 
   gameOfTheDayDuration = linkedSignal(() => {
@@ -56,7 +70,9 @@ export class GameControlsComponent {
     setTimeout(() => {
       this.isGameMenuOpen.set(false);
       this.isLanguageSelectorOpen.set(false);
-      this.isWordOfTheDayOpen.set(false);
+      if (this.gameStore.isDailyGameCompleted()) {
+        this.isWordOfTheDayOpen.set(false);
+      }
     }, 1000);
 
     effect(() => {

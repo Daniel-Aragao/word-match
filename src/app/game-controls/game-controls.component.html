@@ -9,15 +9,19 @@ language
   <div class="flex items-center justify-center gap-2 p-2">
     <button
       class="control-group"
-      [class.open]="isWordOfTheDayOpen() || gameStore.isDailyGameActive()"
-      [class.closed]="!isWordOfTheDayOpen()"
+      [class.open]="isWordOfTheDayOpen() || !gameStore.isDailyGameCompleted()"
+      [class.closed]="!isWordOfTheDayOpen() && gameStore.isDailyGameCompleted()"
     >
       <app-icon
         iconName="EarlyOn"
         (click)="isWordOfTheDayOpen.set(!isWordOfTheDayOpen())"
       />
       @if (gameStore.isDailyGameCompleted() || gameStore.isDailyGameActive()) {
-        <div>
+        <div
+          class="duration"
+          [class.failed]="failedDaily()"
+          [class.succeeded]="succeededDaily()"
+        >
           {{ gameOfTheDayDuration() | duration }}
         </div>
       } @else {

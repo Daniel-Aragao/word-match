@@ -77,6 +77,8 @@ body {
   --color-secondary-hover: var(--color-indigo-500);
   --color-secondary-active: var(--color-indigo-400);
   --color-secondary-text: var(--color-slate-600);
+  --color-secondary-text-success: var(--color-green-600);
+  --color-secondary-text-danger: var(--color-red-600);
 
   --color-danger: var(--color-red-400);
   --color-danger-hover: var(--color-red-300);
