@@ -36,12 +36,12 @@ jobs:
       - name: Build Project
         run: npm run build -- --configuration=production --base-href /word-match/
 
-      - name: Download Existing Sandbox
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: current_site
-        continue-on-error: true
+      # - name: Download Existing Sandbox
+      #   uses: actions/checkout@v4
+      #   with:
+      #     ref: gh-pages
+      #     path: current_site
+      #   continue-on-error: true
 
       - name: Merge Production with Sandbox
         run: |
