@@ -60,6 +60,10 @@ export class GameStore {
   }
 
   newWord(seed?: Date) {
+    if (!seed && this.isDailyGameActive()) {
+      this.endDailyGame(false);
+    }
+
     this.setAnswer();
 
     const word = this.languageStore.getRandomWord(seed);
@@ -115,7 +119,6 @@ export class GameStore {
     this.boardStore.setIsEnded(true);
 
     this.setAnswer(word);
-    this.endDailyGame(false);
   }
 
   private setAnswer(word?: string, success = false) {
@@ -126,6 +129,8 @@ export class GameStore {
           isSuccess: success,
         },
       });
+
+      this.endDailyGame(success);
 
       return;
     }
@@ -152,8 +157,6 @@ export class GameStore {
     this.boardStore.updateCurrentAttempt(attemptLetters);
     this.boardStore.setIsEnded(true);
     this.setAnswer(this.boardStore.word(), true);
-
-    this.endDailyGame(true);
   }
 
   private endDailyGame(hit: boolean) {
@@ -182,10 +185,20 @@ export class GameStore {
       Constants.storage.dailyResult(this.language()),
     );
 
+    if (dailyResult) {
+      const daily = JSON.parse(dailyResult);
+      daily.date = new Date(daily.date);
+
+      if (dateKey(daily.date) === dateKey(new Date())) {
+        patchState(this.state, {
+          dailyResult: daily,
+        });
+        return;
+      }
+    }
+
     patchState(this.state, {
-      dailyResult: dailyResult
-        ? JSON.parse(dailyResult)
-        : { ...initialState.dailyResult },
+      dailyResult: { ...initialState.dailyResult },
     });
   }
 
@@ -249,8 +262,6 @@ export class GameStore {
 
   private processMissedGame() {
     this.setAnswer(this.boardStore.word(), false);
-
-    this.endDailyGame(false);
   }
 
   private updateHittedLetters(

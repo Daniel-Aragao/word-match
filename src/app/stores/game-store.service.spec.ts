@@ -13,10 +13,11 @@ import {
   vitest,
 } from 'vitest';
 import { LanguageService } from '../services/language.service';
-import { Observable, of } from 'rxjs';
+import { delay, Observable, of } from 'rxjs';
 import { LanguageStore } from './language-store.service';
 import { BoardStore } from './board-store.service';
 import { Attempt } from '../models';
+import { afterEach } from 'node:test';
 
 type LanguageStoreMock = {
   setLanguage: MockInstance<() => Observable<void>>;
@@ -364,26 +365,109 @@ describe(GameStore.name, () => {
   });
 
   describe('word of the day', () => {
-    it('should be the same every call', () => {
-      const words = [];
-
-      words.push(store.newWordOfTheDay());
-      words.push(store.newWordOfTheDay());
-      words.push(store.newWordOfTheDay());
-      words.push(store.newWordOfTheDay());
-
-      expect(words).toEqual([words[0], words[0], words[0], words[0]]);
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2025-06-01T10:00:00Z'));
     });
 
-    it('should save start time only once', () => {
-      const words = [];
+    afterEach(() => {
+      vi.useRealTimers();
+    });
 
-      words.push(store.newWordOfTheDay());
-      words.push(store.newWordOfTheDay());
-      words.push(store.newWordOfTheDay());
-      words.push(store.newWordOfTheDay());
+    it('should be the same every call', () => {
+      const spy = vi.spyOn(boardStore, 'setWord').mockImplementation(() => {});
 
-      expect(words).toEqual([words[0], words[0], words[0], words[0]]);
+      store.newWordOfTheDay();
+      store.newWordOfTheDay();
+      store.newWordOfTheDay();
+      store.newWordOfTheDay();
+
+      expect(spy).toBeCalledTimes(1);
+      expect(spy).toBeCalledWith(wordList[0], wordList[0].length + 1);
+    });
+
+    it('should save start time only once', async () => {
+      store.newWordOfTheDay();
+      const start = store.dailyResult.startTime();
+
+      await delay(50);
+
+      store.newWordOfTheDay();
+      store.newWordOfTheDay();
+
+      expect(store.dailyResult.startTime()).toBe(start);
+    });
+
+    it('should reload daily word when day passes', () => {
+      let word1 = '';
+      let word2 = '';
+
+      const spy = vi.spyOn(boardStore, 'setWord').mockImplementation((w) => {
+        if (word1) {
+          word2 = w;
+          return;
+        }
+        word1 = w;
+      });
+
+      store.newWordOfTheDay();
+
+      langStoreMock.getRandomWord.mockReturnValueOnce(wordList[1]);
+      vi.setSystemTime(new Date('2025-06-02T10:00:00Z'));
+      store.newWordOfTheDay();
+
+      expect(spy).toBeCalledTimes(2);
+      expect(word2).not.toBe(word1);
+    });
+    it('should not reload daily word when day does not pass', () => {
+      let word1 = '';
+      let word2 = '';
+
+      const spy = vi.spyOn(boardStore, 'setWord').mockImplementation((w) => {
+        if (word1) {
+          word2 = w;
+          return;
+        }
+        word1 = w;
+      });
+
+      store.newWordOfTheDay();
+
+      langStoreMock.getRandomWord.mockReturnValueOnce(wordList[1]);
+      store.newWordOfTheDay();
+
+      expect(spy).toBeCalledTimes(1);
+      expect(word2).not.toBe(word1);
+    });
+
+    it('should stop challenge on giveUp', () => {
+      store.newWordOfTheDay();
+
+      store.giveUp();
+
+      store.newWordOfTheDay();
+
+      expect(store.isDailyGameCompleted()).toBe(true);
+    });
+
+    it('should stop challenge on newWord', () => {
+      store.newWordOfTheDay();
+
+      store.newWord();
+
+      expect(store.isDailyGameCompleted()).toBe(true);
+      expect(store.dailyResult().isSuccess).toBe(false);
+    });
+
+    it('should not restart challenge on same day', () => {
+      const spy = vi.spyOn(boardStore, 'setWord').mockImplementation(() => {});
+      store.newWordOfTheDay();
+
+      store.giveUp();
+
+      store.newWordOfTheDay();
+
+      expect(spy).toBeCalledTimes(1);
     });
   });
 });
