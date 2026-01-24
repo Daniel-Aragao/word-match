@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { GameStore } from './game-store.service';
 import {
   assert,
+  afterEach,
   beforeEach,
   describe,
   expect,
@@ -17,7 +18,6 @@ import { delay, Observable, of } from 'rxjs';
 import { LanguageStore } from './language-store.service';
 import { BoardStore } from './board-store.service';
 import { Attempt } from '../models';
-import { afterEach } from 'node:test';
 
 type LanguageStoreMock = {
   setLanguage: MockInstance<() => Observable<void>>;
