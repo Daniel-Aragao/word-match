@@ -30,13 +30,35 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
+      - name: Run Tests
+        run: npm run test:no-watch
+
       - name: Build Project
         run: npm run build -- --configuration=production --base-href /word-match/
+
+      - name: Download Existing Sandbox
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: current_site
+        continue-on-error: true
+
+      - name: Merge Production with Sandbox
+        run: |
+          mkdir -p final_output
+          # Se existir uma sandbox no servidor, preserva ela
+          if [ -d "current_site/sandbox" ]; then
+            mkdir -p final_output/sandbox
+            cp -r current_site/sandbox/* final_output/sandbox/
+          fi
+          # Copia o novo build da PROD para a raiz
+          cp -r dist/word-match/browser/* final_output/
+          rm -rf final_output/.git
 
       - name: Upload Build Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/word-match/browser
+          path: final_output
 
       - name: Deploy to GitHub Pages
         id: deployment
