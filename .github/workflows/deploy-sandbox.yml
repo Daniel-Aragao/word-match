@@ -1,0 +1,55 @@
+name: Build and Deploy - test
+
+on:
+  push:
+    branches: [dev] # Triggers whenever you push to main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build_and_deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm" # Automatically caches node_modules for faster builds
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Sandbox
+        run: npm run build -- --configuration=production --base-href /word-match/sandbox/ --output-path dist/sandbox
+
+      - name: Download Production
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: current_site
+
+      - name: Merge Sandbox with Production folders
+        run: |
+          mkdir -p final_output
+          cp -r current_site/* final_output/
+          cp -r dist/sandbox/browser/* final_output/sandbox/
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: final_output
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
