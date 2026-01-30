@@ -31,4 +31,4 @@ def consolidar_palavras(arquivo_origem, arquivo_adicional, arquivo_saida):
     print(f"Processo concluído! Arquivo salvo em: {arquivo_saida}")
 
 # run
-# consolidar_palavras('en-us.txt', 'en-us-common.txt', 'en-us-final.txt')
+consolidar_palavras('fr-common.txt', 'fr-kids.txt', 'fr-final.txt')

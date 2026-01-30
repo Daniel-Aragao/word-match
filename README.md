@@ -1,6 +1,6 @@
 # WordMatch
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.5.
+Personal word game project
 
 ## Development server
 
@@ -8,6 +8,14 @@ To start a local development server, run:
 
 ```bash
 ng serve
+```
+
+## Testing
+
+Run vitest
+
+```bash
+ng test
 ```
 
 ## Todos
@@ -27,6 +35,9 @@ ng serve
   * last runed word or daily
 * Share option
   * word included when not word of the day
+* Add test
+  * language store
+  * game store -> level selection
 
 ## Word Sources
 
