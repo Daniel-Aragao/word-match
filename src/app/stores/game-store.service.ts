@@ -2,18 +2,20 @@ import { computed, effect, Injectable } from '@angular/core';
 import { Attempt, Challenge, Language } from '../models';
 import { patchState, signalState } from '@ngrx/signals';
 import { BoardStore } from './board-store.service';
-import { LanguageStore } from './language-store.service';
+import { LanguageStore, Mode } from './language-store.service';
 import { compare, normalizeString } from '../utils/string.utils';
 import { dateKey } from '../utils/date.utils';
 import { Constants } from '../models/constants';
 
 interface GameState {
   answer: { word: string; isSuccess: boolean } | undefined;
+  level: Mode;
   dailyResult: Challenge;
 }
 
 const initialState: GameState = {
   answer: undefined,
+  level: 'KIDS',
   dailyResult: {
     date: new Date(),
     startTime: 0,
@@ -31,6 +33,12 @@ export class GameStore {
 
   public answer = this.state.answer;
   public language = computed(() => this.languageStore.language());
+  public level = this.state.level;
+  public levelsAvailable = computed(() => this.languageStore.availableModes());
+  public islevelsAvailable = computed(() => {
+    const availability = this.languageStore.availableModes();
+    return availability.KIDS;
+  });
   public dailyResult = this.state.dailyResult;
   public isDailyGameActive = computed(() => {
     return (
@@ -55,6 +63,14 @@ export class GameStore {
     });
   }
 
+  setLevel(mode: Mode) {
+    patchState(this.state, {
+      level: mode,
+    });
+
+    this.newWord();
+  }
+
   setLanguage(language: Language) {
     this.languageStore.setLanguage(language).subscribe(() => this.newWord());
   }
@@ -66,7 +82,7 @@ export class GameStore {
 
     this.setAnswer();
 
-    const word = this.languageStore.getRandomWord(seed);
+    const word = this.languageStore.getRandomWord(seed, this.state.level());
 
     if (word) {
       this.boardStore.setWord(word, word.length + 1);

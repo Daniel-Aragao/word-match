@@ -31,6 +31,17 @@ export class LanguageService {
       .pipe(this.formatData(wordSize));
   }
 
+  getLanguageKidsVocabulary(
+    language: Language,
+    wordSize: number,
+  ): Observable<string[]> {
+    return this.client
+      .get(`vocab/${language.toString()}-kids.txt`, {
+        responseType: 'text',
+      })
+      .pipe(this.formatData(wordSize));
+  }
+
   private formatData(wordSize: number) {
     return map((data: string) => {
       return data

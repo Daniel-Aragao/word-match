@@ -11,7 +11,7 @@ import {
 import { BoardStore } from '../stores/board-store.service';
 import { CommonModule } from '@angular/common';
 import { Key } from 'ts-key-enum';
-import { LanguageStore } from '../stores';
+import { GameStore, LanguageStore } from '../stores';
 import { normalizeString } from '../utils/string.utils';
 @Component({
   selector: 'app-board',
@@ -34,7 +34,10 @@ export class BoardComponent {
     }
 
     if (this.boardStoreService.currentAttempt() === 0) {
-      return this.languageStore.getRandomWord() ?? 'radio';
+      return (
+        this.languageStore.getRandomWord(undefined, this.gameStore.level()) ??
+        'radio'
+      );
     }
 
     const placeholder = this.boardStoreService
@@ -60,6 +63,7 @@ export class BoardComponent {
 
   constructor(
     protected readonly boardStoreService: BoardStore,
+    protected readonly gameStore: GameStore,
     private readonly languageStore: LanguageStore,
   ) {
     effect(() => {

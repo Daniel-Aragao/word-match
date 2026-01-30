@@ -69,6 +69,25 @@ language
         </button>
       }
     </div>
+    <div
+      [hidden]="!gameStore.islevelsAvailable()"
+      class="control-group"
+      [class.open]="isLevelSelectorOpen()"
+      [class.ajar]="!isLevelSelectorOpen()"
+    >
+      <app-icon iconName="Shelves" (click)="toggleLevelSelector()" />
+
+      @for (level of levels(); track level) {
+        @let isActive = this.gameStore.level() === level.mode;
+        <button
+          class="key"
+          [class.active]="isActive"
+          (click)="selectLevel(level.mode, $event)"
+        >
+          <app-icon [iconName]="level.icon" />
+        </button>
+      }
+    </div>
   </div>
   @let answer = gameStore.answer();
 

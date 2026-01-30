@@ -6,10 +6,11 @@ import {
   computed,
   NgZone,
 } from '@angular/core';
-import { GameStore } from '../stores';
+import { GameStore, Mode } from '../stores';
 import { IconComponent } from '../icon/icon.component';
 import { Language } from '../models';
 import { DurationPipe } from '../pipes/duration.pipe';
+import { Icon, IconName } from '../icon/icons';
 
 @Component({
   selector: 'app-game-controls',
@@ -23,6 +24,7 @@ export class GameControlsComponent {
   protected isWordOfTheDayOpen = signal(true);
   protected isGameMenuOpen = signal(true);
   protected isLanguageSelectorOpen = signal(true);
+  protected isLevelSelectorOpen = signal(true);
 
   protected failedDaily = computed(() => {
     return (
@@ -58,6 +60,11 @@ export class GameControlsComponent {
     ].sort((a, b) => a.label.localeCompare(b.label)),
   );
 
+  levels = signal<{ mode: Mode; icon: IconName }[]>([
+    { mode: 'COMMON', icon: 'Book' },
+    { mode: 'KIDS', icon: 'ChildHat' },
+  ]);
+
   constructor(
     protected readonly gameStore: GameStore,
     private readonly zone: NgZone,
@@ -67,9 +74,15 @@ export class GameControlsComponent {
       this.setLanguages(currentLanguage);
     });
 
+    effect(() => {
+      const currentLevel = this.gameStore.level();
+      this.setLevels(currentLevel);
+    });
+
     setTimeout(() => {
       this.isGameMenuOpen.set(false);
       this.isLanguageSelectorOpen.set(false);
+      this.isLevelSelectorOpen.set(false);
       if (this.gameStore.isDailyGameCompleted()) {
         this.isWordOfTheDayOpen.set(false);
       }
@@ -107,6 +120,16 @@ export class GameControlsComponent {
       this.isLanguageSelectorOpen.set(false);
     }
   }
+
+  selectLevel(mode: Mode, event?: Event) {
+    if (this.isLevelSelectorOpen()) {
+      event?.stopPropagation();
+
+      this.gameStore.setLevel(mode);
+
+      this.isLevelSelectorOpen.set(false);
+    }
+  }
   private setLanguages(language: Language) {
     this.languages.update((langs) => {
       return [
@@ -116,7 +139,20 @@ export class GameControlsComponent {
     });
   }
 
+  private setLevels(mode: Mode) {
+    this.levels.update((langs) => {
+      return [
+        langs.find((lang) => lang.mode === mode)!,
+        ...langs.filter((lang) => lang.mode !== mode),
+      ];
+    });
+  }
+
   protected toggleLanguageSelector() {
     this.isLanguageSelectorOpen.update((isOpen) => !isOpen);
+  }
+
+  protected toggleLevelSelector() {
+    this.isLevelSelectorOpen.update((isOpen) => !isOpen);
   }
 }

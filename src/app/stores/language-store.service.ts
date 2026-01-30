@@ -1,4 +1,4 @@
-import { effect, Injectable } from '@angular/core';
+import { computed, effect, Injectable } from '@angular/core';
 import { Language } from '../models';
 import { Vocabulary } from '../models/vocabulary';
 import { patchState, signalState } from '@ngrx/signals';
@@ -16,7 +16,7 @@ import {
 import { createRandomGeneratorOfDay } from '../utils/random.utils';
 import { Constants } from '../models/constants';
 
-type Mode = 'ALL' | 'COMMON';
+export type Mode = 'ALL' | 'COMMON' | 'KIDS';
 
 interface LanguageState {
   selectedLanguage: Language;
@@ -44,6 +44,16 @@ export class LanguageStore {
     this.state.vocabularies()[this.state.selectedLanguage()];
 
   public language = this.state.selectedLanguage;
+  public availableModes = computed(() => {
+    const vocabs = this.state().vocabularies[this.language()];
+    const modes: { [k in Mode]: boolean } = {
+      ALL: vocabs?.ALL !== undefined,
+      COMMON: vocabs?.COMMON !== undefined,
+      KIDS: vocabs?.KIDS !== undefined,
+    };
+
+    return modes;
+  });
 
   constructor(private readonly languageService: LanguageService) {
     this.loadSelectedLanguageFromStorage();
@@ -83,6 +93,7 @@ export class LanguageStore {
     const vocabs = this.state().vocabularies[language];
     const generalVocab = vocabs?.['ALL'];
     const commonVocab = vocabs?.['COMMON'];
+    const kidsVocab = vocabs?.['KIDS'];
 
     const requests: { [key: string]: Observable<any> } = {};
 
@@ -103,6 +114,11 @@ export class LanguageStore {
         .getLanguageCommmonVocabulary(language, 5)
         .pipe(tap((words) => this.addLanguage(language, words, 'COMMON')));
     }
+    if (!kidsVocab) {
+      requests['kids'] = this.languageService
+        .getLanguageKidsVocabulary(language, 5)
+        .pipe(tap((words) => this.addLanguage(language, words, 'KIDS')));
+    }
 
     if (Object.keys(requests).length === 0) {
       return of(void 0);
@@ -111,8 +127,9 @@ export class LanguageStore {
     return forkJoin(requests).pipe(map(() => void 0));
   }
 
-  getRandomWord(seed?: Date) {
-    const vocab = this.getSelectedVocab()?.['COMMON'];
+  getRandomWord(seed?: Date, level: Mode = 'COMMON') {
+    const vocab =
+      this.getSelectedVocab()?.[level] ?? this.getSelectedVocab()?.['COMMON'];
     if (!vocab) return null;
 
     let randomIndex = 0;
