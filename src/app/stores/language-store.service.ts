@@ -95,7 +95,7 @@ export class LanguageStore {
     const commonVocab = vocabs?.['COMMON'];
     const kidsVocab = vocabs?.['KIDS'];
 
-    const requests: { [key: string]: Observable<any> } = {};
+    const requests: { [key: string]: Observable<string[] | undefined> } = {};
 
     if (!generalVocab) {
       requests['all'] = this.languageService
@@ -104,7 +104,7 @@ export class LanguageStore {
           tap((words) => this.addLanguage(language, words, 'ALL')),
           catchError(() => {
             console.error(`Optional vocabulary (ALL) failed for: ${language}`);
-            return of(null);
+            return of(undefined);
           }),
         );
     }
@@ -117,7 +117,13 @@ export class LanguageStore {
     if (!kidsVocab) {
       requests['kids'] = this.languageService
         .getLanguageKidsVocabulary(language, 5)
-        .pipe(tap((words) => this.addLanguage(language, words, 'KIDS')));
+        .pipe(
+          tap((words) => this.addLanguage(language, words, 'KIDS')),
+          catchError(() => {
+            console.error(`Optional vocabulary (KIDS) failed for: ${language}`);
+            return of(undefined);
+          }),
+        );
     }
 
     if (Object.keys(requests).length === 0) {

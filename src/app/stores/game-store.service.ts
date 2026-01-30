@@ -82,7 +82,13 @@ export class GameStore {
 
     this.setAnswer();
 
-    const word = this.languageStore.getRandomWord(seed, this.state.level());
+    const word = this.languageStore.getRandomWord(seed, this.level());
+
+    console.table({
+      language: this.language(),
+      seed,
+      level: this.level(),
+    });
 
     if (word) {
       this.boardStore.setWord(word, word.length + 1);
